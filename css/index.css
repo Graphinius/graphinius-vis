@@ -9,7 +9,7 @@ ul {
 }
 
 .container > div {
-	//width: 25%;
+	/*width: 25%;*/
 	padding: 10px;
   flex-grow: 1;
 }
@@ -44,10 +44,10 @@ h1 {
 
 #containerGraph, #containerNgraph {
   position: absolute;
-  //background-color: grey;
+  /*background-color: grey;*/
   width: 1500px;
   height: 900px;
-  //display: none;
+  /*display: none;*/
 }
 
 #nodeInfo {
@@ -69,12 +69,6 @@ h1 {
   height: 100%;
 }
 */
-
-.svgGraph {
-  //background-color: blue;
-  height: 100%;
-  //display: none;
-}
 
 #fullscreenSwitch {
   position: absolute;

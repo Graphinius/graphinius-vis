@@ -16,6 +16,7 @@ var config = {
   },
   // default size of canvas/container
   container: {
+    element: document.querySelector("#main_vis"),
     WIDTH: 1200,
     HEIGHT: 800
   },
@@ -99,7 +100,7 @@ var config = {
   force_layout: {
     fdLoop: null,
     fdStop: null,
-    magnitude: 1,
+    magnitude: 2,
     speed: 2
   }
 };

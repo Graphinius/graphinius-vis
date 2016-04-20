@@ -11,7 +11,8 @@ var nodes_obj_idx = require("./constant_layout.js").nodes_obj_idx;
 var now = null,
     init_coords = true,
     old_coordinates = null,
-    random_components = null;
+    random_components = null,
+    first_init = true;
 
 function fdLoop() {
   if(init_coords) {
@@ -31,10 +32,17 @@ function init() {
   old_coordinates = new Float32Array(graph.nrNodes() * 3);
   var node_obj = graph.getNodes(),
       i = 0;
+      
+  // BAD HACK!!!
+  var diff_x = first_init ? dims.AVG_X : 0;
+  var diff_y = first_init ? dims.AVG_Y : 0;
+  var diff_z = first_init ? dims.AVG_Z : 0;
+  first_init = false;
+  
   for(node in nodes_obj) {
-    old_coordinates[i] = node_obj[node].getFeature('coords').x - dims.AVG_X;
-    old_coordinates[i + 1] = node_obj[node].getFeature('coords').y - dims.AVG_Y;
-    old_coordinates[i + 2] = node_obj[node].getFeature('coords').z - dims.AVG_Z;
+    old_coordinates[i] = node_obj[node].getFeature('coords').x - diff_x;
+    old_coordinates[i + 1] = node_obj[node].getFeature('coords').y - diff_y;
+    old_coordinates[i + 2] = node_obj[node].getFeature('coords').z - diff_z;
     i += 3;
   }
   init_coords = false;

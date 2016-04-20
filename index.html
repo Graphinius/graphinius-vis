@@ -6,20 +6,23 @@
 
 	<body>
     <div class="container">
-      <div><h2>Options</h2>
-      <h3>Graph Generation</h3>
-        <form>
-          <input type="radio" id="undirected" name="direction" value="undirected" onclick><label for="undirected">undirected graph</label><br>
-          <input type="radio" id="directed" name="direction" value="directed" onclick><label for="directed">directed graph</label><br><br>
-        <form>
-        <input id="input" value="Read File" class="button" type="file" onchange=$GV.input.json.readJSON()><br><br>
-        <input id="renderButton" value="Render Graph" type="button" onclick=$GV.core.render.renderGraph()>
+      <div id="main_controls">
+        <h2>Options</h2>
+        <h3>Graph Generation</h3>
+          <form>
+            <input type="radio" id="undirected" name="direction" value="undirected" onclick><label for="undirected">undirected graph</label><br>
+            <input type="radio" id="directed" name="direction" value="directed" onclick><label for="directed">directed graph</label><br><br>
+          <form>
+          <input id="input" value="Read File" class="button" type="file" onchange=$GV.input.json.readJSON()><br><br>
+          <input id="renderButton" value="Render Graph" type="button" onclick=$GV.core.render.renderGraph()>
 
-      <h3>Graph Activities</h3>
+        <h3>Graph Activities</h3>
+      
         Force Magnitude: <span id="force_mag_display">1</span> <br/>
-        <input id="force_magnitude" type="range" min="1" max="5" step="1" value="1" /> <br/>
+        <input id="force_magnitude" type="range" min="1" max="5" step=".01" value="2" /> <br/>
         Force speed: <span id="force_speed_display">2</span> <br/>
-        <input id="force_speed" type="range" min="1" max="5" step="1" value="2" /> <br/>
+        <input id="force_speed" type="range" min="1" max="5" step=".01" value="2" /> <br/>        
+        
         <div class="onoffswitch">
           <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked onclick=$GV.view.controlUI.startStopForce()>
           <label class="onoffswitch-label" for="myonoffswitch">
@@ -51,7 +54,8 @@
         </div>
       </div>
 
-      <div><h2>Visualisation</h2>
+      <div id="main_vis">
+        <h2>Visualisation</h2>
         <div id="graphVis" width="100%">
 					<!--<div id="fullscreenSwitch" onclick="switchToFullScreen('#containerGraph')"> Fullscreen </div>          -->
           <div id="containerGraph" class="containerGraph" >
@@ -88,5 +92,6 @@
       }
       requestAnimationFrame( animate );  
     </script>
+    
   </body>
 </html>

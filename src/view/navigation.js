@@ -72,7 +72,8 @@ var eventWheel = 'mousewheel';
 if(typeof InstallTrigger !== 'undefined') {
   eventWheel = 'wheel';
 }
-window.addEventListener(eventWheel, mousewheel, false);
+container.element.addEventListener(eventWheel, mousewheel, false);
+
 function mousewheel(event) {
   //wheel down: negative value; firefox positive
   //wheel up: positive value; firefox negative;  
@@ -100,7 +101,8 @@ function mousewheel(event) {
   window.requestAnimationFrame(update);
 }
 
-window.addEventListener('mousemove', mouseMove, false);
+
+container.element.addEventListener('mousemove', mouseMove, false);
 function mouseMove(event) {
 
   if(event.shiftKey && event.buttons == 1) {

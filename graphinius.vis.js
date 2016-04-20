@@ -117,6 +117,7 @@
 	  },
 	  // default size of canvas/container
 	  container: {
+	    element: document.querySelector("#main_vis"),
 	    WIDTH: 1200,
 	    HEIGHT: 800
 	  },
@@ -200,7 +201,7 @@
 	  force_layout: {
 	    fdLoop: null,
 	    fdStop: null,
-	    magnitude: 1,
+	    magnitude: 2,
 	    speed: 2
 	  }
 	};
@@ -430,13 +431,13 @@
 	  }
 	}
 
-	document.querySelector("#force_magnitude").addEventListener('change', function(event) {
+	document.querySelector("#force_magnitude").addEventListener('input', function(event) {
 	  var mag = +document.querySelector("#force_magnitude").value;
 	  force.magnitude = mag;
 	  document.querySelector("#force_mag_display").innerHTML = mag;
 	});
 
-	document.querySelector("#force_speed").addEventListener('change', function(event) {
+	document.querySelector("#force_speed").addEventListener('input', function(event) {
 	  var speed = +document.querySelector("#force_speed").value;
 	  force.speed = speed;
 	  document.querySelector("#force_speed_display").innerHTML = speed;
@@ -931,7 +932,8 @@
 	var now = null,
 	    init_coords = true,
 	    old_coordinates = null,
-	    random_components = null;
+	    random_components = null,
+	    first_init = true;
 
 	function fdLoop() {
 	  if(init_coords) {
@@ -951,10 +953,17 @@
 	  old_coordinates = new Float32Array(graph.nrNodes() * 3);
 	  var node_obj = graph.getNodes(),
 	      i = 0;
+	      
+	  // BAD HACK!!!
+	  var diff_x = first_init ? dims.AVG_X : 0;
+	  var diff_y = first_init ? dims.AVG_Y : 0;
+	  var diff_z = first_init ? dims.AVG_Z : 0;
+	  first_init = false;
+	  
 	  for(node in nodes_obj) {
-	    old_coordinates[i] = node_obj[node].getFeature('coords').x - dims.AVG_X;
-	    old_coordinates[i + 1] = node_obj[node].getFeature('coords').y - dims.AVG_Y;
-	    old_coordinates[i + 2] = node_obj[node].getFeature('coords').z - dims.AVG_Z;
+	    old_coordinates[i] = node_obj[node].getFeature('coords').x - diff_x;
+	    old_coordinates[i + 1] = node_obj[node].getFeature('coords').y - diff_y;
+	    old_coordinates[i + 2] = node_obj[node].getFeature('coords').z - diff_z;
 	    i += 3;
 	  }
 	  init_coords = false;
@@ -1507,7 +1516,8 @@
 	if(typeof InstallTrigger !== 'undefined') {
 	  eventWheel = 'wheel';
 	}
-	window.addEventListener(eventWheel, mousewheel, false);
+	container.element.addEventListener(eventWheel, mousewheel, false);
+
 	function mousewheel(event) {
 	  //wheel down: negative value; firefox positive
 	  //wheel up: positive value; firefox negative;  
@@ -1535,7 +1545,8 @@
 	  window.requestAnimationFrame(update);
 	}
 
-	window.addEventListener('mousemove', mouseMove, false);
+
+	container.element.addEventListener('mousemove', mouseMove, false);
 	function mouseMove(event) {
 
 	  if(event.shiftKey && event.buttons == 1) {
