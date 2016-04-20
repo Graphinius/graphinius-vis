@@ -98,7 +98,9 @@ var config = {
   },
   force_layout: {
     fdLoop: null,
-    fdStop: null
+    fdStop: null,
+    magnitude: 1,
+    speed: 2
   }
 };
 module.exports = config;

@@ -41,6 +41,18 @@ function startStopForce() {
   }
 }
 
+document.querySelector("#force_magnitude").addEventListener('change', function(event) {
+  var mag = +document.querySelector("#force_magnitude").value;
+  force.magnitude = mag;
+  document.querySelector("#force_mag_display").innerHTML = mag;
+});
+
+document.querySelector("#force_speed").addEventListener('change', function(event) {
+  var speed = +document.querySelector("#force_speed").value;
+  force.speed = speed;
+  document.querySelector("#force_speed_display").innerHTML = speed;
+});
+
 module.exports = {
   startStopForce: startStopForce,
   setDirectionUnchecked: setDirectionUnchecked

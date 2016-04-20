@@ -10,7 +10,8 @@ var nodes_obj_idx = require("./constant_layout.js").nodes_obj_idx;
 
 var now = null,
     init_coords = true,
-    old_coordinates = null;
+    old_coordinates = null,
+    random_components = null;
 
 function fdLoop() {
   if(init_coords) {
@@ -38,6 +39,16 @@ function init() {
   }
   init_coords = false;
   defaults.stop_fd = false;
+  
+  // Give every node some random movement component
+  random_components = new Float32Array(graph.nrNodes() * 3),
+  i = 0;
+  for(node in nodes_obj) {
+    random_components[i] = Math.random()*100-50;
+    random_components[i + 1] = Math.random()*100-50;
+    random_components[i + 2] = Math.random()*100-50;
+    i += 3;
+  }
 }
 
 function forceDirectedLayout() {
@@ -47,9 +58,9 @@ function forceDirectedLayout() {
 
   for(node in node_obj) {
     var index = nodes_obj_idx[node];
-    node_obj[node].getFeature('coords').x = old_coordinates[index] + Math.sin(time/500)*150;
-    node_obj[node].getFeature('coords').y = old_coordinates[index + 1] + Math.sin(time/500)*150;
-    node_obj[node].getFeature('coords').z = old_coordinates[index + 2] + Math.sin(time/500)*150;
+    node_obj[node].getFeature('coords').x = old_coordinates[index] + Math.sin(time*force.speed/1000)*random_components[index]*force.magnitude;
+    node_obj[node].getFeature('coords').y = old_coordinates[index + 1] + Math.sin(time*force.speed/1000)*random_components[index+1]*force.magnitude;
+    node_obj[node].getFeature('coords').z = old_coordinates[index + 2] + Math.sin(time*force.speed/1000)*random_components[index+2]*force.magnitude;
 
     old_nodes[index] = node_obj[node].getFeature('coords').x;
     old_nodes[index + 1] = node_obj[node].getFeature('coords').y;

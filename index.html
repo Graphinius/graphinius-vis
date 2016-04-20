@@ -16,6 +16,10 @@
         <input id="renderButton" value="Render Graph" type="button" onclick=$GV.core.render.renderGraph()>
 
       <h3>Graph Activities</h3>
+        Force Magnitude: <span id="force_mag_display">1</span> <br/>
+        <input id="force_magnitude" type="range" min="1" max="5" step="1" value="1" /> <br/>
+        Force speed: <span id="force_speed_display">2</span> <br/>
+        <input id="force_speed" type="range" min="1" max="5" step="1" value="2" /> <br/>
         <div class="onoffswitch">
           <input type="checkbox" name="onoffswitch" class="onoffswitch-checkbox" id="myonoffswitch" checked onclick=$GV.view.controlUI.startStopForce()>
           <label class="onoffswitch-label" for="myonoffswitch">
@@ -49,7 +53,7 @@
 
       <div><h2>Visualisation</h2>
         <div id="graphVis" width="100%">
-					<div id="fullscreenSwitch" onclick="switchToFullScreen('#containerGraph')"> Fullscreen </div>          
+					<!--<div id="fullscreenSwitch" onclick="switchToFullScreen('#containerGraph')"> Fullscreen </div>          -->
           <div id="containerGraph" class="containerGraph" >
             <div id="nodeInfo">Node ID: <span id="nodeID"></span></div>
           </div>
@@ -62,5 +66,27 @@
 		<script type="text/javascript" src="lib/three.min.js"></script>
 		<script type="text/javascript" src="lib/graphinius.min.js"></script>
     <script type="text/javascript" src="graphinius.vis.js"></script>
+    
+    <!-- FPS Counter -->
+    <script src='//rawgit.com/mrdoob/stats.js/master/build/stats.min.js'></script>
+    <script>
+      var stats = new Stats();
+      stats.showPanel( 0 ); // 0: fps, 1: ms, 2: mb, 3+: custom
+      stats.dom.style="position:fixed;top:5px;right:5px";
+      document.body.appendChild( stats.dom );
+
+      /**
+       * window.requestAnimationFrame collects all calls to it
+       * slowing down the following code - so we can use this snippet 
+       * without including our actual graph rendering code here...
+       */
+      function animate() {
+          stats.begin();
+          // Usually, measured code would go here...
+          stats.end();
+          requestAnimationFrame( animate );
+      }
+      requestAnimationFrame( animate );  
+    </script>
   </body>
 </html>
