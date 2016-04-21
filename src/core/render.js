@@ -3,7 +3,7 @@ var globals = require("./init.js").globals;
 var constant = require("../layout/constant_layout.js");
 var controlUI = require("../view/controlUI.js");
 
-function renderGraph() {  
+function renderGraph() {
   var graph = graph || window.graph;
   if(!graph) {
     throw new Error("No graph object present, unable to render anything.");

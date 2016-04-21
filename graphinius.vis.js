@@ -217,7 +217,7 @@
 	var constant = __webpack_require__(3);
 	var controlUI = __webpack_require__(4);
 
-	function renderGraph() {  
+	function renderGraph() {
 	  var graph = graph || window.graph;
 	  if(!graph) {
 	    throw new Error("No graph object present, unable to render anything.");
@@ -1149,8 +1149,8 @@
 	  }
 	  network.children[0].geometry.attributes.position.needsUpdate = true;
 
-	  //update edges  
-	  var undEdges = [network.children[1].geometry.getAttribute('position').array, 
+	  //update edges
+	  var undEdges = [network.children[1].geometry.getAttribute('position').array,
 	                    update_node.undEdges()];
 	  //TODO - directed
 	  var in_out_edges = {};
@@ -1159,7 +1159,7 @@
 	  //----
 	  var dirEdges = [network.children[2].geometry.getAttribute('position').array,
 	                    in_out_edges];
-	  
+
 	  [undEdges, dirEdges].forEach(function(all_edges_of_a_node) {
 	    var old_edges = all_edges_of_a_node[0];
 	    var edges = all_edges_of_a_node[1];
@@ -1179,14 +1179,14 @@
 	        old_edges[edge_index + 4] = update_node.getFeature('coords').y;
 	        old_edges[edge_index + 5] = update_node.getFeature('coords').z;
 	      }
-	      
+
 	      if(globals.TWO_D_MODE) {
 	        old_edges[index + 2] = 0;
 	        old_edges[index + 5] = 0;
 	      }
 	    }
 	  });
-	  
+
 	  network.children[1].geometry.attributes.position.needsUpdate = true;
 	  network.children[2].geometry.attributes.position.needsUpdate = true;
 	  window.requestAnimationFrame(update);
@@ -1204,7 +1204,7 @@
 	      old_coordinates[i + 2] = 0;
 	    }
 	    i += 3;
-	  }  
+	  }
 	  window.cnt = 0;
 	  requestAnimationFrame(updateRandomPostions);
 	}
@@ -1213,7 +1213,7 @@
 	  //update node
 	  var node_obj = graph.getNodes();
 	  var old_nodes = network.children[0].geometry.getAttribute('position').array;
-	  
+
 	  for(node in node_obj) {
 	    var index = nodes_obj_idx[node];
 	    node_obj[node].getFeature('coords').x = old_coordinates[index] + Math.random() * 20 - 10 - dims.AVG_X;
@@ -1225,14 +1225,14 @@
 
 	    old_nodes[index] = node_obj[node].getFeature('coords').x;
 	    old_nodes[index + 1] = node_obj[node].getFeature('coords').y;
-	    old_nodes[index + 2] = node_obj[node].getFeature('coords').z;    
+	    old_nodes[index + 2] = node_obj[node].getFeature('coords').z;
 	  }
 
-	  var undEdges = [ network.children[1].geometry.getAttribute('position').array, 
+	  var undEdges = [ network.children[1].geometry.getAttribute('position').array,
 	                    graph.getUndEdges()];
 	  var dirEdges = [ network.children[2].geometry.getAttribute('position').array,
 	                    graph.getDirEdges()];
-	  
+
 	  //update edges
 	  [undEdges, dirEdges].forEach(function(all_edges_of_a_node) {
 	    var i = 0;
@@ -1302,7 +1302,7 @@
 	        i += 6;
 	      }
 	    });
-	    
+
 	    network.children[0].geometry.attributes.position.needsUpdate = true;
 	    network.children[1].geometry.attributes.position.needsUpdate = true;
 	    network.children[2].geometry.attributes.position.needsUpdate = true;
@@ -1315,14 +1315,14 @@
 	  var nodes_array = network.children[0].geometry.attributes.position.array,
 	      undEdges_array = network.children[1].geometry.attributes.position.array,
 	      dirEdges_array = network.children[2].geometry.attributes.position.array;
-	  
+
 	  [nodes_array, undEdges_array, dirEdges_array].forEach(function(array) {
 	    for(var i = 0; i < array.length;) {
 	      array[i + 2] = 0;
 	      i+=3;
 	    }
 	  });
-	  
+
 	  network.children[0].geometry.attributes.position.needsUpdate = true;
 	  network.children[1].geometry.attributes.position.needsUpdate = true;
 	  network.children[2].geometry.attributes.position.needsUpdate = true;
@@ -1363,7 +1363,7 @@
 	    array[i + 5] = nodes_obj[node_b_id].getFeature('coords').z;
 	    i += 6;
 	  }
-	  
+
 	  network.children[0].geometry.attributes.position.needsUpdate = true;
 	  network.children[1].geometry.attributes.position.needsUpdate = true;
 	  network.children[2].geometry.attributes.position.needsUpdate = true;
@@ -1384,14 +1384,14 @@
 	    attributes.color.array[globals.INTERSECTED.index*3] = globals.INTERSECTED.color.r;
 	    attributes.color.array[globals.INTERSECTED.index*3 + 1] = globals.INTERSECTED.color.g;
 	    attributes.color.array[globals.INTERSECTED.index*3 + 2] = globals.INTERSECTED.color.b;
-	    
+
 	    globals.INTERSECTED.index = intersects[0].index;
 	    globals.INTERSECTED.color.setRGB(
-	      attributes.color.array[intersects[0].index*3], 
+	      attributes.color.array[intersects[0].index*3],
 	      attributes.color.array[intersects[0].index*3 + 1],
 	      attributes.color.array[intersects[0].index*3 + 2]
 	    );
-	    
+
 	    //set new node
 	    attributes.color.array[intersects[0].index*3] = defaults.highlight_node_color.r;
 	    attributes.color.array[intersects[0].index*3 + 1] = defaults.highlight_node_color.g;
@@ -1401,11 +1401,11 @@
 	    //TODO resize node
 	    //attributes.size.array[intersects[0].index] = 20;
 	    //attributes.size.needsUpdate = true;
-	    
+
 	    //get key by index
 	    var nodeID = Object.keys(nodes_obj_idx)[intersects[0].index];
 	    globals.INTERSECTED.node = window.graph.getNodeById(nodeID);
-	    
+
 	    //Hint: update is called in navigation
 	    //window.requestAnimationFrame(update);
 	  }
@@ -1415,7 +1415,7 @@
 	  globals.selected_node._features.coords.x = Math.floor((Math.random() * dims.MAX_X) - dims.AVG_X);
 	  globals.selected_node._features.coords.y = Math.floor((Math.random() * dims.MAX_Y) - dims.AVG_Y);
 	  globals.selected_node._features.coords.z = Math.floor((Math.random() * dims.MAX_Z) - dims.AVG_Z);
-	  
+
 	  updateNodePosition(globals.selected_node);
 	}
 
@@ -1520,13 +1520,13 @@
 
 	function mousewheel(event) {
 	  //wheel down: negative value; firefox positive
-	  //wheel up: positive value; firefox negative;  
-	  
+	  //wheel up: positive value; firefox negative;
+
 	  var delta = event.wheelDelta; //chromium, ...
 	  if(typeof InstallTrigger !== 'undefined') { //firefox
-	    delta = event.deltaY * defaults.firefox_wheel_factor; 
+	    delta = event.deltaY * defaults.firefox_wheel_factor;
 	  }
-	  
+
 	  if(event.altKey) {
 	    if(delta < 0) {
 	      network.rotateOnAxis(axis_y, -defaults.delta_rotation);
@@ -1575,8 +1575,8 @@
 	    var mouseY = event.clientY / container.HEIGHT;
 
 	    var rest = (container.WIDTH/2) - (globals.graph_dims.MAX_X/2);
-	    var max_x = globals.graph_dims.MAX_X/2;
-	    var max_y = globals.graph_dims.MAX_Y/2;
+	    var max_x = globals.graph_dims.MAX_X;
+	    var max_y = globals.graph_dims.MAX_Y;
 
 	    if(globals.camera.position.x > max_x) {
 	      globals.camera.position.x = max_x;

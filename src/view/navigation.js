@@ -76,13 +76,13 @@ container.element.addEventListener(eventWheel, mousewheel, false);
 
 function mousewheel(event) {
   //wheel down: negative value; firefox positive
-  //wheel up: positive value; firefox negative;  
-  
+  //wheel up: positive value; firefox negative;
+
   var delta = event.wheelDelta; //chromium, ...
   if(typeof InstallTrigger !== 'undefined') { //firefox
-    delta = event.deltaY * defaults.firefox_wheel_factor; 
+    delta = event.deltaY * defaults.firefox_wheel_factor;
   }
-  
+
   if(event.altKey) {
     if(delta < 0) {
       network.rotateOnAxis(axis_y, -defaults.delta_rotation);
@@ -131,8 +131,8 @@ function mouseMove(event) {
     var mouseY = event.clientY / container.HEIGHT;
 
     var rest = (container.WIDTH/2) - (globals.graph_dims.MAX_X/2);
-    var max_x = globals.graph_dims.MAX_X/2;
-    var max_y = globals.graph_dims.MAX_Y/2;
+    var max_x = globals.graph_dims.MAX_X;
+    var max_y = globals.graph_dims.MAX_Y;
 
     if(globals.camera.position.x > max_x) {
       globals.camera.position.x = max_x;
