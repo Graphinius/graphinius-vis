@@ -13,8 +13,8 @@
             <input type="radio" id="undirected" name="direction" value="undirected" onclick><label for="undirected">undirected graph</label><br>
             <input type="radio" id="directed" name="direction" value="directed" onclick><label for="directed">directed graph</label><br><br>
           <form>
-          <input id="input" value="Read File" class="button" type="file" onchange=$GV.input.json.readJSON()><br><br>
-          <input id="renderButton" value="Render Graph" type="button" onclick=$GV.core.render.renderGraph()>
+          <input id="input" value="Read File" class="button" type="file" onchange="$GV.input.json.readJSON(null, false, false, true)"><br><br>
+          <input id="renderButton" value="Render Graph" type="button" onclick="$GV.core.render.renderGraph()">
 
         <h3>Graph Activities</h3>
       
@@ -38,6 +38,8 @@
         <input id="updateAllNodesButton" value="Update All Nodes" type="button" onclick=$GV.view.interaction.updateAll()><br/><br/>
         <input id="randomBFSButton" value="BFS (random)" type="button" onclick=$GV.core.mutate.colorBFS(null)><br/>
         <input id="chosenBFSButton" value="BFS (click)" type="button" onclick=$GV.core.mutate.colorBFSclick()><br/><br/>
+        <input id="randomPFSButton" value="PFS (random)" type="button" onclick=$GV.core.mutate.colorPFS(null)><br/>
+        <input id="chosenPFSButton" value="PFS (click)" type="button" onclick=$GV.core.mutate.colorPFSclick()><br/><br/>
         <input id="randomDFSButton" value="DFS (random)" type="button" onclick=$GV.core.mutate.colorDFS(null)><br/>
         <input id="chosenDFSButton" value="DFS (click)" type="button" onclick=$GV.core.mutate.colorDFSclick()><br/><br/>
         <input id="chosenHideNodeButton" value="Hide Node (click)" type="button" onclick=$GV.core.mutate.hideNodeClick()><br/>
@@ -48,9 +50,9 @@
         <div id="graphInfo">
           Number of nodes: <span id="nodes"></span><br/>
           Number of edges: <span id="edges"></span><br/>
-<!--
-          Time to read <span id="time"></span>
--->
+        <!--
+                  Time to read graph input file <span id="time"></span>
+        -->
         </div>
       </div>
 

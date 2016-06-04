@@ -37,7 +37,7 @@
   "dependencies": {
     "color": "^0.11.1",
     "gradient": "^0.2.0",
-    "graphinius": "^0.2.3",
+    "graphinius": "^0.3.2",
     "three-js": "^74.0.1"
   }
 }

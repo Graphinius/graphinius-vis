@@ -216,20 +216,46 @@ function colorAllEdges(hexColor) {
   network.children[2].geometry.attributes.color.needsUpdate = true;
   window.requestAnimationFrame(update);
 }
+
+
+function colorBFS(node) {  
+  var root = node != null ? node : graph.getRandomNode();  
+  var result_object = $G.search.BFS(graph, root);
+  colorDistMap(result_object);
+}
+
+
+function colorBFSclick() {
+  console.log('Selected node:');
+  console.dir(globals.selected_node);
+  colorBFS(globals.selected_node);
+}
+
+
+function colorPFS(node) {
+  var root = node != null ? node : graph.getRandomNode();  
+  var result_object = $G.search.PFS(graph, root);
+  colorDistMap(result_object);
+}
+
+
+function colorPFSclick() {
+  console.log('Selected node:');
+  console.dir(globals.selected_node);
+  colorPFS(globals.selected_node);
+}
+
+
 //Hint: index = node id
-function colorBFS(node) {
+function colorDistMap(result_object) {
   segment_color_obj = {};
   var max_distance = 0,
       additional_node = false,
-      infinity_node = false,
-      start_node = graph.getRandomNode();
-  if(node != null) {
-    start_node = node;
-  }
-  var bfs = $G.search.BFS(graph, start_node);
-  for(index in bfs) {
-    if(bfs[index].distance !== Number.POSITIVE_INFINITY) {
-      max_distance = Math.max(max_distance, bfs[index].distance);
+      infinity_node = false;
+      
+  for(index in result_object) {
+    if(result_object[index].distance !== Number.POSITIVE_INFINITY) {
+      max_distance = Math.max(max_distance, result_object[index].distance);
     }
   }
 
@@ -255,10 +281,14 @@ function colorBFS(node) {
     gradient.push(newColor);
   }
 
-  for(index in bfs) {
+  for(index in result_object) {
     var hex_color = '#ffffff';
-    if(bfs[index].distance !== Number.POSITIVE_INFINITY) {
-      hex_color = gradient[bfs[index].distance].getHex();
+    
+    if(result_object[index].distance !== Number.POSITIVE_INFINITY) {
+      if( (result_object[index].distance|0) < 0) {
+        throw new Error('Negative distances are not supported yet!');
+      }    
+      hex_color = gradient[(result_object[index].distance)|0].getHex();
     }
 
     colorSingleNode(graph.getNodeById(index), hex_color);
@@ -279,6 +309,7 @@ function colorBFS(node) {
   });
   window.requestAnimationFrame(update);
 }
+
 
 //Hint: index = node id
 function colorDFS(node) {
@@ -322,6 +353,12 @@ function colorDFS(node) {
   window.requestAnimationFrame(update);
 }
 
+function colorDFSclick() {
+  console.log('Selected node:');
+  console.dir(globals.selected_node);
+  colorDFS(globals.selected_node);
+}
+
 function hideNodeClick() {
   hideNode(globals.selected_node);
 }
@@ -331,14 +368,6 @@ function colorSingleNodeClick() {
       hexColor = defaults.randomColors[randomIndex];
   colorSingleNode(globals.selected_node, hexColor);
   window.requestAnimationFrame(update);
-}
-
-function colorBFSclick() {
-  colorBFS(globals.selected_node);
-}
-
-function colorDFSclick() {
-  colorDFS(globals.selected_node);
 }
 
 module.exports = {
@@ -354,6 +383,8 @@ module.exports = {
   colorAllEdges: colorAllEdges,
   colorBFS: colorBFS,
   colorDFS: colorDFS,
+  colorPFS: colorPFS,
   colorBFSclick: colorBFSclick,
-  colorDFSclick: colorDFSclick
+  colorDFSclick: colorDFSclick,
+  colorPFSclick: colorPFSclick
 };

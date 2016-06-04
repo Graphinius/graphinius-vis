@@ -40,24 +40,25 @@
 /******/ 	return __webpack_require__(0);
 /******/ })
 /************************************************************************/
-/******/ ([
-/* 0 */
+/******/ ({
+
+/***/ 0:
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {var init            = __webpack_require__(1),
-	    render          = __webpack_require__(2),
-	    mutate          = __webpack_require__(5),
-	    hist_reader     = __webpack_require__(6),
-	    main_loop       = __webpack_require__(7),
-	    readCSV         = __webpack_require__(8),
-	    readJSON        = __webpack_require__(9),
-	    const_layout    = __webpack_require__(3),
-	    force_layout    = __webpack_require__(10),
-	    generic_layout  = __webpack_require__(11),
-	    fullscreen      = __webpack_require__(12),
-	    interaction     = __webpack_require__(13),
-	    navigation      = __webpack_require__(14),
-	    controlUI       = __webpack_require__(4);
+	    render          = __webpack_require__(55),
+	    mutate          = __webpack_require__(58),
+	    hist_reader     = __webpack_require__(59),
+	    main_loop       = __webpack_require__(60),
+	    readCSV         = __webpack_require__(61),
+	    readJSON        = __webpack_require__(62),
+	    const_layout    = __webpack_require__(56),
+	    force_layout    = __webpack_require__(63),
+	    generic_layout  = __webpack_require__(64),
+	    fullscreen      = __webpack_require__(65),
+	    interaction     = __webpack_require__(66),
+	    navigation      = __webpack_require__(67),
+	    controlUI       = __webpack_require__(57);
 
 
 	var out = typeof window !== 'undefined' ? window : global;
@@ -96,8 +97,11 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
 /***/ },
-/* 1 */
+
+/***/ 1:
 /***/ function(module, exports) {
+
+	// window.$G = require('graphinius').$G;
 
 	var config = {
 	  // keys for handling events
@@ -209,13 +213,14 @@
 
 
 /***/ },
-/* 2 */
+
+/***/ 55:
 /***/ function(module, exports, __webpack_require__) {
 
 	var container = __webpack_require__(1).container;
 	var globals = __webpack_require__(1).globals;
-	var constant = __webpack_require__(3);
-	var controlUI = __webpack_require__(4);
+	var constant = __webpack_require__(56);
+	var controlUI = __webpack_require__(57);
 
 	function renderGraph() {
 	  var graph = graph || window.graph;
@@ -249,7 +254,8 @@
 
 
 /***/ },
-/* 3 */
+
+/***/ 56:
 /***/ function(module, exports, __webpack_require__) {
 
 	var container = __webpack_require__(1).container;
@@ -385,7 +391,8 @@
 
 
 /***/ },
-/* 4 */
+
+/***/ 57:
 /***/ function(module, exports, __webpack_require__) {
 
 	var force = __webpack_require__(1).force_layout;
@@ -450,13 +457,14 @@
 
 
 /***/ },
-/* 5 */
+
+/***/ 58:
 /***/ function(module, exports, __webpack_require__) {
 
 	var network = __webpack_require__(1).globals.network;
-	var update = __webpack_require__(2).update;
-	var nodes_obj_idx = __webpack_require__(3).nodes_obj_idx;
-	var edges_obj_idx = __webpack_require__(3).edges_obj_idx;
+	var update = __webpack_require__(55).update;
+	var nodes_obj_idx = __webpack_require__(56).nodes_obj_idx;
+	var edges_obj_idx = __webpack_require__(56).edges_obj_idx;
 	var globals = __webpack_require__(1).globals;
 	var dims = __webpack_require__(1).globals.graph_dims;
 	var defaults = __webpack_require__(1).defaults;
@@ -671,20 +679,46 @@
 	  network.children[2].geometry.attributes.color.needsUpdate = true;
 	  window.requestAnimationFrame(update);
 	}
+
+
+	function colorBFS(node) {  
+	  var root = node != null ? node : graph.getRandomNode();  
+	  var result_object = $G.search.BFS(graph, root);
+	  colorDistMap(result_object);
+	}
+
+
+	function colorBFSclick() {
+	  console.log('Selected node:');
+	  console.dir(globals.selected_node);
+	  colorBFS(globals.selected_node);
+	}
+
+
+	function colorPFS(node) {
+	  var root = node != null ? node : graph.getRandomNode();  
+	  var result_object = $G.search.PFS(graph, root);
+	  colorDistMap(result_object);
+	}
+
+
+	function colorPFSclick() {
+	  console.log('Selected node:');
+	  console.dir(globals.selected_node);
+	  colorPFS(globals.selected_node);
+	}
+
+
 	//Hint: index = node id
-	function colorBFS(node) {
+	function colorDistMap(result_object) {
 	  segment_color_obj = {};
 	  var max_distance = 0,
 	      additional_node = false,
-	      infinity_node = false,
-	      start_node = graph.getRandomNode();
-	  if(node != null) {
-	    start_node = node;
-	  }
-	  var bfs = $G.search.BFS(graph, start_node);
-	  for(index in bfs) {
-	    if(bfs[index].distance !== Number.POSITIVE_INFINITY) {
-	      max_distance = Math.max(max_distance, bfs[index].distance);
+	      infinity_node = false;
+	      
+	  for(index in result_object) {
+	    if(result_object[index].distance !== Number.POSITIVE_INFINITY) {
+	      max_distance = Math.max(max_distance, result_object[index].distance);
 	    }
 	  }
 
@@ -710,10 +744,14 @@
 	    gradient.push(newColor);
 	  }
 
-	  for(index in bfs) {
+	  for(index in result_object) {
 	    var hex_color = '#ffffff';
-	    if(bfs[index].distance !== Number.POSITIVE_INFINITY) {
-	      hex_color = gradient[bfs[index].distance].getHex();
+	    
+	    if(result_object[index].distance !== Number.POSITIVE_INFINITY) {
+	      if( (result_object[index].distance|0) < 0) {
+	        throw new Error('Negative distances are not supported yet!');
+	      }    
+	      hex_color = gradient[(result_object[index].distance)|0].getHex();
 	    }
 
 	    colorSingleNode(graph.getNodeById(index), hex_color);
@@ -734,6 +772,7 @@
 	  });
 	  window.requestAnimationFrame(update);
 	}
+
 
 	//Hint: index = node id
 	function colorDFS(node) {
@@ -777,6 +816,12 @@
 	  window.requestAnimationFrame(update);
 	}
 
+	function colorDFSclick() {
+	  console.log('Selected node:');
+	  console.dir(globals.selected_node);
+	  colorDFS(globals.selected_node);
+	}
+
 	function hideNodeClick() {
 	  hideNode(globals.selected_node);
 	}
@@ -786,14 +831,6 @@
 	      hexColor = defaults.randomColors[randomIndex];
 	  colorSingleNode(globals.selected_node, hexColor);
 	  window.requestAnimationFrame(update);
-	}
-
-	function colorBFSclick() {
-	  colorBFS(globals.selected_node);
-	}
-
-	function colorDFSclick() {
-	  colorDFS(globals.selected_node);
 	}
 
 	module.exports = {
@@ -809,19 +846,23 @@
 	  colorAllEdges: colorAllEdges,
 	  colorBFS: colorBFS,
 	  colorDFS: colorDFS,
+	  colorPFS: colorPFS,
 	  colorBFSclick: colorBFSclick,
-	  colorDFSclick: colorDFSclick
+	  colorDFSclick: colorDFSclick,
+	  colorPFSclick: colorPFSclick
 	};
 
 
 /***/ },
-/* 6 */
+
+/***/ 59:
 /***/ function(module, exports) {
 
 	
 
 /***/ },
-/* 7 */
+
+/***/ 60:
 /***/ function(module, exports) {
 
 	
@@ -843,13 +884,15 @@
 
 
 /***/ },
-/* 8 */
+
+/***/ 61:
 /***/ function(module, exports) {
 
 	
 
 /***/ },
-/* 9 */
+
+/***/ 62:
 /***/ function(module, exports) {
 
 	function readJSON(event, explicit, direction, weighted_mode) {
@@ -916,7 +959,8 @@
 
 
 /***/ },
-/* 10 */
+
+/***/ 63:
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -926,8 +970,8 @@
 	var network = globals.network;
 	var dims = globals.graph_dims;
 	var force = INIT.force_layout;
-	var update = __webpack_require__(2).update;
-	var nodes_obj_idx = __webpack_require__(3).nodes_obj_idx;
+	var update = __webpack_require__(55).update;
+	var nodes_obj_idx = __webpack_require__(56).nodes_obj_idx;
 
 	var now = null,
 	    init_coords = true,
@@ -1047,13 +1091,15 @@
 
 
 /***/ },
-/* 11 */
+
+/***/ 64:
 /***/ function(module, exports) {
 
 	
 
 /***/ },
-/* 12 */
+
+/***/ 65:
 /***/ function(module, exports) {
 
 	var FSelem = {
@@ -1120,13 +1166,14 @@
 
 
 /***/ },
-/* 13 */
+
+/***/ 66:
 /***/ function(module, exports, __webpack_require__) {
 
 	var network = __webpack_require__(1).globals.network;
-	var update = __webpack_require__(2).update;
-	var nodes_obj_idx = __webpack_require__(3).nodes_obj_idx;
-	var edges_obj_idx = __webpack_require__(3).edges_obj_idx;
+	var update = __webpack_require__(55).update;
+	var nodes_obj_idx = __webpack_require__(56).nodes_obj_idx;
+	var edges_obj_idx = __webpack_require__(56).edges_obj_idx;
 	var dims = __webpack_require__(1).globals.graph_dims;
 	var mouse = __webpack_require__(1).globals.mouse;
 	var defaults = __webpack_require__(1).defaults;
@@ -1439,17 +1486,18 @@
 
 
 /***/ },
-/* 14 */
+
+/***/ 67:
 /***/ function(module, exports, __webpack_require__) {
 
 	var keys = __webpack_require__(1).keys;
 	var globals = __webpack_require__(1).globals;
 	var defaults = __webpack_require__(1).defaults;
-	var update = __webpack_require__(2).update;
+	var update = __webpack_require__(55).update;
 	var network = __webpack_require__(1).globals.network;
 	var container = __webpack_require__(1).container;
 	var mouse = __webpack_require__(1).globals.mouse;
-	var nodeIntersection = __webpack_require__(13).nodeIntersection;
+	var nodeIntersection = __webpack_require__(66).nodeIntersection;
 	var callbacks = __webpack_require__(1).callbacks;
 
 	// for testing purposes
@@ -1611,9 +1659,13 @@
 	  window.requestAnimationFrame(update);
 	}
 
-	window.addEventListener('click', click, false);
+
+	container.element.addEventListener('click', click, false);
 	function click(event) {
 	  if(globals.INTERSECTED.node != null) {
+	    
+	    console.log(globals.INTERSECTED.node);
+	    
 	    globals.selected_node = globals.INTERSECTED.node;
 	    document.querySelector("#nodeInfo").style.visibility = 'visible';
 	    var ni = callbacks.node_intersects;
@@ -1631,4 +1683,5 @@
 
 
 /***/ }
-/******/ ]);
+
+/******/ });
