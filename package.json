@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Niciii/GraphiniusVis.git"
+    "url": "git+https://github.com/cassinius/GraphiniusVis.git"
   },
   "keywords": [
     "graph",
@@ -18,26 +18,23 @@
   "author": "Nicole Neuhold, Bernd Malle",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Niciii/GraphiniusVis/issues"
+    "url": "https://github.com/cassinius/GraphiniusVis/issues"
   },
-  "homepage": "https://github.com/Niciii/GraphiniusVis#readme",
+  "homepage": "https://github.com/cassinius/GraphiniusVis#readme",
   "devDependencies": {
     "browser-sync": "^2.11.0",
     "browser-sync-webpack-plugin": "^1.0.1",
-    "browserify": "^13.0.0",
     "glob": "^6.0.4",
     "gulp": "^3.9.0",
+    "gulp-rename": "^1.2.2",
     "gulp-sass": "^2.1.1",
     "gulp-uglify": "^1.5.3",
+    "ignore-loader": "^0.1.1",
     "json-loader": "^0.5.4",
-    "vinyl-source-stream": "^1.1.0",
     "webpack": "^1.12.14",
     "webpack-stream": "^3.1.0"
   },
   "dependencies": {
-    "color": "^0.11.1",
-    "gradient": "^0.2.0",
-    "graphinius": "^0.3.3",
-    "three-js": "^74.0.1"
+    "graphinius": "^0.3.5"
   }
 }

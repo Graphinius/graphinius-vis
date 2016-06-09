@@ -1,4 +1,4 @@
-window.$G = require('graphinius').$G;
+// window.$G = require('graphinius').$G;
 
 var config = {
   // keys for handling events

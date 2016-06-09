@@ -1,5 +1,6 @@
 var BrowserSyncPlugin = require('browser-sync-webpack-plugin');
-
+var webpack = require('webpack');
+var ignore = new webpack.IgnorePlugin(/^(graphinius)$/)
 
 module.exports = {
   entry: './index.js',
@@ -19,6 +20,7 @@ module.exports = {
   },
   node: {
     fs: "empty",
+    http: "empty",
     request: "empty",
     net: "empty",
     tls: "empty"
@@ -30,6 +32,7 @@ module.exports = {
       host: 'localhost',
       port: 3000,
       server: { baseDir: ['./'] }
-    })
+    }),
+    ignore
   ]
 };

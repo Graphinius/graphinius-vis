@@ -1,10 +1,8 @@
 var gulp        = require('gulp');
 var browserSync = require('browser-sync');
-var sass        = require('gulp-sass');
-var browserify  = require('browserify');
-var source      = require('vinyl-source-stream');
 var glob        = require('glob');
 var webpack     = require('webpack-stream');
+var rename 			= require('gulp-rename');
 var uglify      = require('gulp-uglify');
 
 
@@ -17,32 +15,29 @@ gulp.task('browserSync', function() {
   });
 
   gulp.watch('*.html').on('change', browserSync.reload);
-  gulp.watch('src/core/*.js').on('change', browserSync.reload);
+  gulp.watch('src/**/*.js').on('change', browserSync.reload);
 });
 
 // Packaging - Webpack
 gulp.task('pack', function() {
   return gulp.src('./index.js')
     .pipe(webpack( require('./webpack.config.js') ))
-    // .pipe(uglify())
-    .pipe(gulp.dest('./'));
+    .pipe(gulp.dest('build/'));
 });
 
-gulp.task('default', function() {
-  console.log('graphinius vis');
+// Uglification...
+gulp.task('bundle', ['pack'], function() {
+	return gulp.src('build/graphinius.vis.js')
+		.pipe(uglify())
+		.pipe(rename('graphinius.vis.min.js'))
+		.pipe(gulp.dest('build'));
 });
+
+gulp.task('default', ['browserSync']);
+
 
 // gulp.task('sass', function() {
 //   return gulp.src('lib/plotly/scss/*')
 //     .pipe(sass()) // Using gulp-sass
 //     .pipe(gulp.dest('lib/plotly/css'))
-// });
-
-// TODO use globs...
-// gulp.task('browserify-bundle', function() {
-//     return browserify({ entries: ['src/node_js/firstTest.js', 'src/node_js/testNGraphPin.js', 'src/node_js/testPixelStatic.js'] })
-//         .bundle()
-//         .pipe(source('bundle-node.js'))
-//         .pipe(gulp.dest('build'))
-//         .pipe(browserSync.stream());
 // });
