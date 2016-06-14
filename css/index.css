@@ -104,17 +104,6 @@ h1 {
     font-size: 14px; color: white; font-family: Trebuchet, Arial, sans-serif; font-weight: bold;
     box-sizing: border-box;
 }
-.onoffswitch-inner:before {
-    content: "Constant";
-    padding-left: 11px;
-    background-color: #34C251; color: #FFFFFF;
-}
-.onoffswitch-inner:after {
-    content: "Force";
-    padding-right: 11px;
-    background-color: #2B97F0; color: #FFFFFF;
-    text-align: right;
-}
 .onoffswitch-switch {
     display: block; width: 18px; margin: 6px;
     background: #FFFFFF;
@@ -128,4 +117,28 @@ h1 {
 }
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
     right: 0px; 
+}
+
+.onoffswitch-inner.force:before {
+    content: "Constant";
+    padding-left: 11px;
+    background-color: #34C251; color: #FFFFFF;
+}
+.onoffswitch-inner.force:after {
+    content: "Force";
+    padding-right: 11px;
+    background-color: #2B97F0; color: #FFFFFF;
+    text-align: right;
+}
+
+.onoffswitch-inner.history:before {
+    content: "ON";
+    padding-left: 11px;
+    background-color: #34C251; color: #FFFFFF;
+}
+.onoffswitch-inner.history:after {
+    content: "OFF";
+    padding-right: 11px;
+    background-color: #cc0000; color: #FFFFFF;
+    text-align: right;
 }

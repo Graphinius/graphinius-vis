@@ -418,18 +418,29 @@
 
 	function startStopForce() {
 	  //start force directed layout
-	  if(!document.querySelector("#myonoffswitch").checked) {
-	    document.querySelector("#updateAllNodesButton").style.visibility="hidden";
-	    document.querySelector("#chosenHideNodeButton").style.visibility="hidden";
-	    document.querySelector("#chosenUpdateNodeButton").style.visibility="hidden";
+	  if(!document.querySelector("#forceLayoutSwitch").checked) {
+	    // document.querySelector("#updateAllNodesButton").style.visibility="hidden";
+	    // document.querySelector("#chosenHideNodeButton").style.visibility="hidden";
+	    // document.querySelector("#chosenUpdateNodeButton").style.visibility="hidden";
 	    force.fdLoop();
 	  }
 	  //stop force directed layout
 	  else {
-	    document.querySelector("#updateAllNodesButton").style.visibility="visible";
-	    document.querySelector("#chosenHideNodeButton").style.visibility="visible";
-	    document.querySelector("#chosenUpdateNodeButton").style.visibility="visible";
+	    // document.querySelector("#updateAllNodesButton").style.visibility="visible";
+	    // document.querySelector("#chosenHideNodeButton").style.visibility="visible";
+	    // document.querySelector("#chosenUpdateNodeButton").style.visibility="visible";
 	    force.fdStop();
+	  }
+	}
+
+	function startStopHistory() {
+	  if(!document.querySelector("#historySwitch").checked) {
+	    console.log("History OFF...");
+	    // force.fdLoop();
+	  }
+	  else {
+	    console.log("History ON...");
+	    // force.fdStop();
 	  }
 	}
 
@@ -447,6 +458,7 @@
 
 	module.exports = {
 	  startStopForce: startStopForce,
+	  startStopHistory: startStopHistory,
 	  setDirectionUnchecked: setDirectionUnchecked
 	};
 
