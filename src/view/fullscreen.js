@@ -5,9 +5,12 @@ var FSelem = {
     };
 
 function switchToFullScreen(elem_string) {
+  // console.log(elem_string);
   var elem = document.querySelector(elem_string);
+  // console.log(elem);
   var canvas = document.querySelector(elem_string + " canvas");
-  console.log(canvas);
+  // console.log(canvas);
+  
   if (elem) {
     FSelem = {
       el: elem,
@@ -24,6 +27,8 @@ function switchToFullScreen(elem_string) {
     } else if (elem.webkitRequestFullscreen) {
       elem.webkitRequestFullscreen();
     }
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
     canvas.focus();
   }
   else {
@@ -59,3 +64,7 @@ document.addEventListener("fullscreenchange", FShandler);
 document.addEventListener("webkitfullscreenchange", FShandler);
 document.addEventListener("mozfullscreenchange", FShandler);
 document.addEventListener("MSFullscreenChange", FShandler);
+
+module.exports = {
+  switchToFullScreen: switchToFullScreen
+}

@@ -5,6 +5,7 @@
 	</head>
 
 	<body>
+    
     <div class="container">
       <div id="main_controls">
         <h2>Options</h2>
@@ -60,28 +61,39 @@
         <input id="chosenColorNodeButton" value="Color Node (click)" type="button" onclick=$GV.core.mutate.colorSingleNodeClick()><br/>
         <input id="chosenUpdateNodeButton" value="Update Node Position (click)" type="button" onclick=$GV.view.interaction.updateNodePositionClick()>-->
 
-        <h3>Graph Information</h3>
-        <div id="graphInfo">
-          Number of nodes: <span id="nodes"></span><br/>
-          Number of edges: <span id="edges"></span><br/>
-        <!--
-                  Time to read graph input file <span id="time"></span>
-        -->
+          <h3>Graph Information</h3>
+          <div id="graphInfo">
+            Number of nodes: <span id="nodes"></span><br/>
+            Number of edges: <span id="edges"></span><br/>
+          <!--
+                    Time to read graph input file <span id="time"></span>
+          -->
+          </div>
+                  
         </div>
-      </div>
+        
+        
 
       <div id="main_vis">
         <h2>Visualisation</h2>
         <div id="graphVis" width="100%">
-					<!--<div id="fullscreenSwitch" onclick="switchToFullScreen('#containerGraph')"> Fullscreen </div>          -->
+					<!--<div id="fullscreenSwitch" onclick=$GV.view.fullscreen.switchToFullScreen('#containerGraph')> Fullscreen </div>          -->
           <div id="containerGraph" class="containerGraph" >
             <div id="nodeInfo">Node ID: <span id="nodeID"></span></div>
-          </div>
-          <div id="containerNgraph" class="containerNgraph">
+                        
+            <div id="nav-legend">
+              <span class="title">Navigation Control</span> </br>
+              PAN: Click+Mouse Move </br>
+              ROTATE: Shift+Click+Mouse</br>
+              ZOOM: Mouse Scroll</br>
+              ROTATE-Z: Alt+Mouse Scroll
+            </div>
           </div>
         </div>
       </div>
     </div>
+    
+    <div id="bg-blurry">
 
 		<script type="text/javascript" src="lib/three.min.js"></script>
 		<script type="text/javascript" src="lib/graphinius.min.js"></script>
@@ -109,5 +121,6 @@
       requestAnimationFrame( animate );  
     </script>
     
+   
   </body>
 </html>

@@ -20,18 +20,18 @@ var config = {
   container: {
     element: document.querySelector("#main_vis"),
     WIDTH: 1200,
-    HEIGHT: 800
+    HEIGHT: 900
   },
   // default render parameters
   defaults: {
     node_size: 6,
-    background_color: 0x000000,
+    background_color: 'transparent',
     tranparent: true,
     opacity: 0.5, //default is 1; range: 0.0 - 1.0
     linewidth: 1,
     
     //camera settings
-    fov: 70,
+    fov: 50,
     near: 0.1,
     far: 5000,
     
@@ -40,8 +40,8 @@ var config = {
 
     //zoom
     ZOOM_FACTOR: 0.05,
-    MAX_FOV: 100, //zoom out
-    MIN_FOV: 20, //zoom in
+    MAX_FOV: 120, //zoom out
+    MIN_FOV: 10, //zoom in
 
     //distance to move
     delta_distance: 10,
@@ -91,7 +91,7 @@ var config = {
       index: 0, color: new THREE.Color(), node: null
     },
     raycaster: new THREE.Raycaster(),
-    renderer: new THREE.WebGLRenderer({antialias: false}),
+    renderer: new THREE.WebGLRenderer({antialias: false, alpha: true}),
     scene: new THREE.Scene(),
     network: new THREE.Group(),
     camera: null

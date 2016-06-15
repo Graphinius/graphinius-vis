@@ -121,18 +121,18 @@
 	  container: {
 	    element: document.querySelector("#main_vis"),
 	    WIDTH: 1200,
-	    HEIGHT: 800
+	    HEIGHT: 900
 	  },
 	  // default render parameters
 	  defaults: {
 	    node_size: 6,
-	    background_color: 0x000000,
+	    background_color: 'transparent',
 	    tranparent: true,
 	    opacity: 0.5, //default is 1; range: 0.0 - 1.0
 	    linewidth: 1,
 	    
 	    //camera settings
-	    fov: 70,
+	    fov: 50,
 	    near: 0.1,
 	    far: 5000,
 	    
@@ -141,8 +141,8 @@
 
 	    //zoom
 	    ZOOM_FACTOR: 0.05,
-	    MAX_FOV: 100, //zoom out
-	    MIN_FOV: 20, //zoom in
+	    MAX_FOV: 120, //zoom out
+	    MIN_FOV: 10, //zoom in
 
 	    //distance to move
 	    delta_distance: 10,
@@ -192,7 +192,7 @@
 	      index: 0, color: new THREE.Color(), node: null
 	    },
 	    raycaster: new THREE.Raycaster(),
-	    renderer: new THREE.WebGLRenderer({antialias: false}),
+	    renderer: new THREE.WebGLRenderer({antialias: false, alpha: true}),
 	    scene: new THREE.Scene(),
 	    network: new THREE.Group(),
 	    camera: null
@@ -220,6 +220,7 @@
 	var controlUI = __webpack_require__(4);
 
 	function renderGraph() {
+	  
 	  var graph = graph || window.graph;
 	  if(!graph) {
 	    throw new Error("No graph object present, unable to render anything.");
@@ -241,6 +242,8 @@
 	}
 
 	function updateGraph () {
+	  // make transparent
+	  globals.renderer.setClearColor(0x000000, 0);
 	  globals.renderer.render(globals.scene, globals.camera);
 	};
 
@@ -391,6 +394,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var force = __webpack_require__(1).force_layout;
+	var switchToFullScreen = __webpack_require__(12).switchToFullScreen;
 
 	if(localStorage.getItem("directed") == 1) {
 	  document.querySelector("#directed").checked = true;
@@ -448,6 +452,12 @@
 	  var mag = +document.querySelector("#force_magnitude").value;
 	  force.magnitude = mag;
 	  document.querySelector("#force_mag_display").innerHTML = mag;
+	});
+
+	document.querySelector("#force_speed").addEventListener('input', function(event) {
+	  var speed = +document.querySelector("#force_speed").value;
+	  force.speed = speed;
+	  document.querySelector("#force_speed_display").innerHTML = speed;
 	});
 
 	document.querySelector("#force_speed").addEventListener('input', function(event) {
@@ -1109,9 +1119,12 @@
 	    };
 
 	function switchToFullScreen(elem_string) {
+	  // console.log(elem_string);
 	  var elem = document.querySelector(elem_string);
+	  // console.log(elem);
 	  var canvas = document.querySelector(elem_string + " canvas");
-	  console.log(canvas);
+	  // console.log(canvas);
+	  
 	  if (elem) {
 	    FSelem = {
 	      el: elem,
@@ -1128,6 +1141,8 @@
 	    } else if (elem.webkitRequestFullscreen) {
 	      elem.webkitRequestFullscreen();
 	    }
+	    canvas.width = window.innerWidth;
+	    canvas.height = window.innerHeight;
 	    canvas.focus();
 	  }
 	  else {
@@ -1164,6 +1179,9 @@
 	document.addEventListener("mozfullscreenchange", FShandler);
 	document.addEventListener("MSFullscreenChange", FShandler);
 
+	module.exports = {
+	  switchToFullScreen: switchToFullScreen
+	}
 
 /***/ },
 /* 13 */

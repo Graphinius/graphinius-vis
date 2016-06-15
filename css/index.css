@@ -142,3 +142,45 @@ h1 {
     background-color: #cc0000; color: #FFFFFF;
     text-align: right;
 }
+
+#nav-legend {
+  position: absolute;
+  top: 5px;
+  left: 0px;
+  width: 280px;
+  border-radius: 3px;
+  color: #FFFFFF;
+  font-size: 18px;
+  padding: 15px;
+  background-color: rgba(0, 0, 0, 0.6);
+  
+  
+}
+
+.title {
+  display: inline-block;
+  font-size: 22px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+#bg-blurry {
+  z-index: -5;
+  position: fixed;
+  top: -15px;
+  left: -15px;
+  right: -15px;
+  bottom: -15px;
+  background:
+    /* top, transparent black, faked with gradient */
+    linear-gradient(
+      rgba(0, 0, 0, 0.8),
+      rgba(0, 0, 0, 0.8)
+    ),
+    url(../img/osneb3.jpg) fixed;
+    background-size: cover;
+    background-position: 50% 50%;
+    -webkit-filter: blur(10px);
+    filter: blur(10px);
+}

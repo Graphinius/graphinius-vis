@@ -4,6 +4,7 @@ var constant = require("../layout/constant_layout.js");
 var controlUI = require("../view/controlUI.js");
 
 function renderGraph() {
+  
   var graph = graph || window.graph;
   if(!graph) {
     throw new Error("No graph object present, unable to render anything.");
@@ -25,6 +26,8 @@ function renderGraph() {
 }
 
 function updateGraph () {
+  // make transparent
+  globals.renderer.setClearColor(0x000000, 0);
   globals.renderer.render(globals.scene, globals.camera);
 };
 

@@ -1,4 +1,5 @@
 var force = require("../core/init.js").force_layout;
+var switchToFullScreen = require("./fullscreen").switchToFullScreen;
 
 if(localStorage.getItem("directed") == 1) {
   document.querySelector("#directed").checked = true;
@@ -56,6 +57,12 @@ document.querySelector("#force_magnitude").addEventListener('input', function(ev
   var mag = +document.querySelector("#force_magnitude").value;
   force.magnitude = mag;
   document.querySelector("#force_mag_display").innerHTML = mag;
+});
+
+document.querySelector("#force_speed").addEventListener('input', function(event) {
+  var speed = +document.querySelector("#force_speed").value;
+  force.speed = speed;
+  document.querySelector("#force_speed_display").innerHTML = speed;
 });
 
 document.querySelector("#force_speed").addEventListener('input', function(event) {
