@@ -855,7 +855,8 @@
 	  colorPFS: colorPFS,
 	  colorBFSclick: colorBFSclick,
 	  colorDFSclick: colorDFSclick,
-	  colorPFSclick: colorPFSclick
+	  colorPFSclick: colorPFSclick,
+	  colorDistMap: colorDistMap
 	};
 
 
