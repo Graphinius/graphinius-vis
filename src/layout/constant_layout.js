@@ -14,9 +14,11 @@ globals.camera = new THREE.PerspectiveCamera(
 );
 
 function renderGraph(graph) {
-  dims.MIN_X = dims.MAX_X = nodes_obj[0].getFeature('coords').x;
-  dims.MIN_Y = dims.MAX_Y = nodes_obj[0].getFeature('coords').y;
-  dims.MIN_Z = dims.MAX_Z = nodes_obj[0].getFeature('coords').z;
+  console.log(defaults.edge_color);
+  console.log(defaults.node_color);
+  
+  dims.MIN_X = dims.MIN_Y = dims.MIN_Z = Number.POSITIVE_INFINITY;
+  dims.MAX_X = dims.MAX_Y = dims.MAX_Z = Number.NEGATIVE_INFINITY;
 
   for(node in nodes_obj) {
     var x = nodes_obj[node].getFeature('coords').x;
@@ -55,9 +57,17 @@ function renderGraph(graph) {
     vertices[i*3 + 2] = z - dims.AVG_Z;
 
     // Trying to set original color
-    nodeColors[i*3] = nodes_obj[node].getFeature('color').r/256.0;
-    nodeColors[i*3 + 1] = nodes_obj[node].getFeature('color').g/256.0;
-    nodeColors[i*3 + 2] = nodes_obj[node].getFeature('color').b/256.0;
+    if ( nodes_obj[node].getFeature('color') ) {
+      nodeColors[i*3] = nodes_obj[node].getFeature('color').r/256.0;
+      nodeColors[i*3 + 1] = nodes_obj[node].getFeature('color').g/256.0;
+      nodeColors[i*3 + 2] = nodes_obj[node].getFeature('color').b/256.0;
+    }
+    else {
+      var j = i * 3;
+      nodeColors[j++] = defaults.node_color.r/256.0;
+      nodeColors[j++] = defaults.node_color.g/256.0;
+      nodeColors[j++] = defaults.node_color.b/256.0;
+    }
 
     nodeSizes[i] = 6;
     nodes_obj_idx[node]= i*3;
@@ -101,12 +111,24 @@ function renderGraph(graph) {
       positionLine[i * 6 + 4] = nodes_obj[node_b_id].getFeature('coords').y - dims.AVG_Y;
       positionLine[i * 6 + 5] = nodes_obj[node_b_id].getFeature('coords').z - dims.AVG_Z;
 
-      lineColors[i * 6] = nodes_obj[node_a_id].getFeature('color').r/256.0;
-      lineColors[i * 6 + 1] = nodes_obj[node_a_id].getFeature('color').g/256.0;
-      lineColors[i * 6 + 2] = nodes_obj[node_a_id].getFeature('color').b/256.0;
-      lineColors[i * 6 + 3] = nodes_obj[node_b_id].getFeature('color').r/256.0;
-      lineColors[i * 6 + 4] = nodes_obj[node_b_id].getFeature('color').g/256.0;
-      lineColors[i * 6 + 5] = nodes_obj[node_b_id].getFeature('color').b/256.0;
+      if ( nodes_obj[node].getFeature('color') ) {
+        lineColors[i * 6] = nodes_obj[node_a_id].getFeature('color').r/256.0;
+        lineColors[i * 6 + 1] = nodes_obj[node_a_id].getFeature('color').g/256.0;
+        lineColors[i * 6 + 2] = nodes_obj[node_a_id].getFeature('color').b/256.0;
+        lineColors[i * 6 + 3] = nodes_obj[node_b_id].getFeature('color').r/256.0;
+        lineColors[i * 6 + 4] = nodes_obj[node_b_id].getFeature('color').g/256.0;
+        lineColors[i * 6 + 5] = nodes_obj[node_b_id].getFeature('color').b/256.0;
+      }
+      else {
+        var j = i * 6;
+        lineColors[j++] = defaults.edge_color.r/256.0;
+        lineColors[j++] = defaults.edge_color.g/256.0;
+        lineColors[j++] = defaults.edge_color.b/256.0;
+        lineColors[j++] = defaults.edge_color.r/256.0;
+        lineColors[j++] = defaults.edge_color.g/256.0;
+        lineColors[j++] = defaults.edge_color.b/256.0;        
+      }
+
 
       edges_obj_idx[edge_index] = i*6;
       i++;

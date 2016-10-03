@@ -46,15 +46,15 @@
 
 	/* WEBPACK VAR INJECTION */(function(global) {var init            = __webpack_require__(1),
 	    render          = __webpack_require__(2),
-	    mutate          = __webpack_require__(5),
-	    hist_reader     = __webpack_require__(6),
-	    main_loop       = __webpack_require__(7),
-	    readCSV         = __webpack_require__(8),
-	    readJSON        = __webpack_require__(9),
+	    mutate          = __webpack_require__(6),
+	    hist_reader     = __webpack_require__(7),
+	    main_loop       = __webpack_require__(8),
+	    readCSV         = __webpack_require__(9),
+	    readJSON        = __webpack_require__(10),
 	    const_layout    = __webpack_require__(3),
-	    force_layout    = __webpack_require__(10),
-	    generic_layout  = __webpack_require__(11),
-	    fullscreen      = __webpack_require__(12),
+	    force_layout    = __webpack_require__(11),
+	    generic_layout  = __webpack_require__(12),
+	    fullscreen      = __webpack_require__(5),
 	    interaction     = __webpack_require__(13),
 	    navigation      = __webpack_require__(14),
 	    controlUI       = __webpack_require__(4);
@@ -394,7 +394,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var force = __webpack_require__(1).force_layout;
-	var switchToFullScreen = __webpack_require__(12).switchToFullScreen;
+	var switchToFullScreen = __webpack_require__(5).switchToFullScreen;
 
 	if(localStorage.getItem("directed") == 1) {
 	  document.querySelector("#directed").checked = true;
@@ -475,6 +475,81 @@
 
 /***/ },
 /* 5 */
+/***/ function(module, exports) {
+
+	var FSelem = {
+	      el: null,
+	      width: null,
+	      height: null
+	    };
+
+	function switchToFullScreen(elem_string) {
+	  // console.log(elem_string);
+	  var elem = document.querySelector(elem_string);
+	  // console.log(elem);
+	  var canvas = document.querySelector(elem_string + " canvas");
+	  // console.log(canvas);
+	  
+	  if (elem) {
+	    FSelem = {
+	      el: elem,
+	      width: elem.clientWidth,
+	      height: elem.clientHeight
+	    }
+	    // console.log(elem);
+	    if (elem.requestFullscreen) {
+	      elem.requestFullscreen();
+	    } else if (elem.msRequestFullscreen) {
+	      elem.msRequestFullscreen();
+	    } else if (elem.mozRequestFullScreen) {
+	      elem.mozRequestFullScreen();
+	    } else if (elem.webkitRequestFullscreen) {
+	      elem.webkitRequestFullscreen();
+	    }
+	    canvas.width = window.innerWidth;
+	    canvas.height = window.innerHeight;
+	    canvas.focus();
+	  }
+	  else {
+	    alert("Element to full-screen does not exist...");
+	  }
+	}
+
+	function FShandler( event ) {
+	  var fullscreenElement = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement;
+	  var fullscreenEnabled = document.fullscreenEnabled || document.mozFullScreenEnabled || document.webkitFullscreenEnabled;
+	  if ( fullscreenElement ) {
+	      // console.log("fullscreen enabled!");
+	      fullscreenElement.style.width = "100%";
+	      fullscreenElement.style.height = "100%";
+	  }
+	  else {
+	      // console.log("fullscreen disabled!");
+	      // we can't get the element that WAS in fullscreen,
+	      // so we fall back to a manual entry...
+	      // console.log(FSelem);
+	      FSelem.el.style.width = FSelem.width+"px";
+	      FSelem.el.style.height = FSelem.height+"px";
+	  }
+	}
+
+	function setAndUpdateNrMutilate() {
+	  var val = document.querySelector("#nr_mutilate_per_frame").value;
+	  document.querySelector("#nr_mutilate_per_frame_val").innerHTML = val;
+	  window.$GV.setNrMutilate(val);
+	}
+
+	document.addEventListener("fullscreenchange", FShandler);
+	document.addEventListener("webkitfullscreenchange", FShandler);
+	document.addEventListener("mozfullscreenchange", FShandler);
+	document.addEventListener("MSFullscreenChange", FShandler);
+
+	module.exports = {
+	  switchToFullScreen: switchToFullScreen
+	}
+
+/***/ },
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var network = __webpack_require__(1).globals.network;
@@ -871,13 +946,13 @@
 
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports) {
 
 	
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports) {
 
 	
@@ -899,13 +974,13 @@
 
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports) {
 
 	
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports) {
 
 	function readJSON(event, explicit, direction, weighted_mode) {
@@ -972,7 +1047,7 @@
 
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -1103,85 +1178,10 @@
 
 
 /***/ },
-/* 11 */
-/***/ function(module, exports) {
-
-	
-
-/***/ },
 /* 12 */
 /***/ function(module, exports) {
 
-	var FSelem = {
-	      el: null,
-	      width: null,
-	      height: null
-	    };
-
-	function switchToFullScreen(elem_string) {
-	  // console.log(elem_string);
-	  var elem = document.querySelector(elem_string);
-	  // console.log(elem);
-	  var canvas = document.querySelector(elem_string + " canvas");
-	  // console.log(canvas);
-	  
-	  if (elem) {
-	    FSelem = {
-	      el: elem,
-	      width: elem.clientWidth,
-	      height: elem.clientHeight
-	    }
-	    // console.log(elem);
-	    if (elem.requestFullscreen) {
-	      elem.requestFullscreen();
-	    } else if (elem.msRequestFullscreen) {
-	      elem.msRequestFullscreen();
-	    } else if (elem.mozRequestFullScreen) {
-	      elem.mozRequestFullScreen();
-	    } else if (elem.webkitRequestFullscreen) {
-	      elem.webkitRequestFullscreen();
-	    }
-	    canvas.width = window.innerWidth;
-	    canvas.height = window.innerHeight;
-	    canvas.focus();
-	  }
-	  else {
-	    alert("Element to full-screen does not exist...");
-	  }
-	}
-
-	function FShandler( event ) {
-	  var fullscreenElement = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement;
-	  var fullscreenEnabled = document.fullscreenEnabled || document.mozFullScreenEnabled || document.webkitFullscreenEnabled;
-	  if ( fullscreenElement ) {
-	      // console.log("fullscreen enabled!");
-	      fullscreenElement.style.width = "100%";
-	      fullscreenElement.style.height = "100%";
-	  }
-	  else {
-	      // console.log("fullscreen disabled!");
-	      // we can't get the element that WAS in fullscreen,
-	      // so we fall back to a manual entry...
-	      // console.log(FSelem);
-	      FSelem.el.style.width = FSelem.width+"px";
-	      FSelem.el.style.height = FSelem.height+"px";
-	  }
-	}
-
-	function setAndUpdateNrMutilate() {
-	  var val = document.querySelector("#nr_mutilate_per_frame").value;
-	  document.querySelector("#nr_mutilate_per_frame_val").innerHTML = val;
-	  window.$GV.setNrMutilate(val);
-	}
-
-	document.addEventListener("fullscreenchange", FShandler);
-	document.addEventListener("webkitfullscreenchange", FShandler);
-	document.addEventListener("mozfullscreenchange", FShandler);
-	document.addEventListener("MSFullscreenChange", FShandler);
-
-	module.exports = {
-	  switchToFullScreen: switchToFullScreen
-	}
+	
 
 /***/ },
 /* 13 */

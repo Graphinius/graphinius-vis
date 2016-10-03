@@ -24,10 +24,10 @@ var config = {
   },
   // default render parameters
   defaults: {
-    node_size: 6,
-    background_color: 'transparent',
-    tranparent: true,
-    opacity: 0.5, //default is 1; range: 0.0 - 1.0
+    node_size: 4,
+    background_color: 0x000000,
+    transparent: true,
+    opacity: 0.2, //default is 1; range: 0.0 - 1.0
     linewidth: 1,
     
     //camera settings
@@ -40,8 +40,8 @@ var config = {
 
     //zoom
     ZOOM_FACTOR: 0.05,
-    MAX_FOV: 120, //zoom out
-    MIN_FOV: 10, //zoom in
+    MAX_FOV: 12000, //zoom out
+    MIN_FOV: 1, //zoom in
 
     //distance to move
     delta_distance: 10,
@@ -61,8 +61,16 @@ var config = {
     bfs_gradient_start_color: 0x079207, // dark shit green
     
     //color for colorSingleEdge/Node, addEdge
-    edge_color: '#ff0000',
-    node_color: '#ff0000',
+    edge_color: {
+      r: 127,
+      g: 255,
+      b: 212
+    },
+    node_color: {
+      r: 255,
+      g: 20,
+      b: 20
+    },
     
     //mouse wheel - firefox
     //minus: firefox has different wheel direction
@@ -75,17 +83,17 @@ var config = {
   globals: {
     mouse: new THREE.Vector2(),
     graph_dims: {
-      MIN_X: 0,
-      MAX_X: 0,
-      AVG_X: 0,
-      MIN_Y: 0,
-      MAX_Y: 0,
-      AVG_Y: 0,
-      MIN_Z: 0,
-      MAX_Z: 0,
-      AVG_Z: 0
+      MIN_X: undefined,
+      MAX_X: undefined,
+      AVG_X: undefined,
+      MIN_Y: undefined,
+      MAX_Y: undefined,
+      AVG_Y: undefined,
+      MIN_Z: undefined,
+      MAX_Z: undefined,
+      AVG_Z: undefined
     },
-    selected_node: null,
+    selected_node: undefined,
     TWO_D_MODE: false,
     INTERSECTED: {
       index: 0, color: new THREE.Color(), node: null

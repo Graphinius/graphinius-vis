@@ -46,15 +46,15 @@
 
 	/* WEBPACK VAR INJECTION */(function(global) {var init            = __webpack_require__(1),
 	    render          = __webpack_require__(2),
-	    mutate          = __webpack_require__(5),
-	    hist_reader     = __webpack_require__(6),
-	    main_loop       = __webpack_require__(7),
-	    readCSV         = __webpack_require__(8),
-	    readJSON        = __webpack_require__(9),
+	    mutate          = __webpack_require__(6),
+	    hist_reader     = __webpack_require__(7),
+	    main_loop       = __webpack_require__(8),
+	    readCSV         = __webpack_require__(9),
+	    readJSON        = __webpack_require__(10),
 	    const_layout    = __webpack_require__(3),
-	    force_layout    = __webpack_require__(10),
-	    generic_layout  = __webpack_require__(11),
-	    fullscreen      = __webpack_require__(12),
+	    force_layout    = __webpack_require__(11),
+	    generic_layout  = __webpack_require__(12),
+	    fullscreen      = __webpack_require__(5),
 	    interaction     = __webpack_require__(13),
 	    navigation      = __webpack_require__(14),
 	    controlUI       = __webpack_require__(4);
@@ -121,18 +121,18 @@
 	  container: {
 	    element: document.querySelector("#main_vis"),
 	    WIDTH: 1200,
-	    HEIGHT: 800
+	    HEIGHT: 900
 	  },
 	  // default render parameters
 	  defaults: {
-	    node_size: 6,
+	    node_size: 4,
 	    background_color: 0x000000,
-	    tranparent: true,
-	    opacity: 0.5, //default is 1; range: 0.0 - 1.0
+	    transparent: true,
+	    opacity: 0.2, //default is 1; range: 0.0 - 1.0
 	    linewidth: 1,
 	    
 	    //camera settings
-	    fov: 70,
+	    fov: 50,
 	    near: 0.1,
 	    far: 5000,
 	    
@@ -141,8 +141,8 @@
 
 	    //zoom
 	    ZOOM_FACTOR: 0.05,
-	    MAX_FOV: 100, //zoom out
-	    MIN_FOV: 20, //zoom in
+	    MAX_FOV: 12000, //zoom out
+	    MIN_FOV: 1, //zoom in
 
 	    //distance to move
 	    delta_distance: 10,
@@ -162,8 +162,16 @@
 	    bfs_gradient_start_color: 0x079207, // dark shit green
 	    
 	    //color for colorSingleEdge/Node, addEdge
-	    edge_color: '#ff0000',
-	    node_color: '#ff0000',
+	    edge_color: {
+	      r: 127,
+	      g: 255,
+	      b: 212
+	    },
+	    node_color: {
+	      r: 255,
+	      g: 20,
+	      b: 20
+	    },
 	    
 	    //mouse wheel - firefox
 	    //minus: firefox has different wheel direction
@@ -176,23 +184,23 @@
 	  globals: {
 	    mouse: new THREE.Vector2(),
 	    graph_dims: {
-	      MIN_X: 0,
-	      MAX_X: 0,
-	      AVG_X: 0,
-	      MIN_Y: 0,
-	      MAX_Y: 0,
-	      AVG_Y: 0,
-	      MIN_Z: 0,
-	      MAX_Z: 0,
-	      AVG_Z: 0
+	      MIN_X: undefined,
+	      MAX_X: undefined,
+	      AVG_X: undefined,
+	      MIN_Y: undefined,
+	      MAX_Y: undefined,
+	      AVG_Y: undefined,
+	      MIN_Z: undefined,
+	      MAX_Z: undefined,
+	      AVG_Z: undefined
 	    },
-	    selected_node: null,
+	    selected_node: undefined,
 	    TWO_D_MODE: false,
 	    INTERSECTED: {
 	      index: 0, color: new THREE.Color(), node: null
 	    },
 	    raycaster: new THREE.Raycaster(),
-	    renderer: new THREE.WebGLRenderer({antialias: false}),
+	    renderer: new THREE.WebGLRenderer({antialias: false, alpha: true}),
 	    scene: new THREE.Scene(),
 	    network: new THREE.Group(),
 	    camera: null
@@ -220,6 +228,7 @@
 	var controlUI = __webpack_require__(4);
 
 	function renderGraph() {
+	  
 	  var graph = graph || window.graph;
 	  if(!graph) {
 	    throw new Error("No graph object present, unable to render anything.");
@@ -241,6 +250,8 @@
 	}
 
 	function updateGraph () {
+	  // make transparent
+	  globals.renderer.setClearColor(0x000000, 0);
 	  globals.renderer.render(globals.scene, globals.camera);
 	};
 
@@ -270,9 +281,11 @@
 	);
 
 	function renderGraph(graph) {
-	  dims.MIN_X = dims.MAX_X = nodes_obj[0].getFeature('coords').x;
-	  dims.MIN_Y = dims.MAX_Y = nodes_obj[0].getFeature('coords').y;
-	  dims.MIN_Z = dims.MAX_Z = nodes_obj[0].getFeature('coords').z;
+	  console.log(defaults.edge_color);
+	  console.log(defaults.node_color);
+	  
+	  dims.MIN_X = dims.MIN_Y = dims.MIN_Z = Number.POSITIVE_INFINITY;
+	  dims.MAX_X = dims.MAX_Y = dims.MAX_Z = Number.NEGATIVE_INFINITY;
 
 	  for(node in nodes_obj) {
 	    var x = nodes_obj[node].getFeature('coords').x;
@@ -311,9 +324,17 @@
 	    vertices[i*3 + 2] = z - dims.AVG_Z;
 
 	    // Trying to set original color
-	    nodeColors[i*3] = nodes_obj[node].getFeature('color').r/256.0;
-	    nodeColors[i*3 + 1] = nodes_obj[node].getFeature('color').g/256.0;
-	    nodeColors[i*3 + 2] = nodes_obj[node].getFeature('color').b/256.0;
+	    if ( nodes_obj[node].getFeature('color') ) {
+	      nodeColors[i*3] = nodes_obj[node].getFeature('color').r/256.0;
+	      nodeColors[i*3 + 1] = nodes_obj[node].getFeature('color').g/256.0;
+	      nodeColors[i*3 + 2] = nodes_obj[node].getFeature('color').b/256.0;
+	    }
+	    else {
+	      var j = i * 3;
+	      nodeColors[j++] = defaults.node_color.r/256.0;
+	      nodeColors[j++] = defaults.node_color.g/256.0;
+	      nodeColors[j++] = defaults.node_color.b/256.0;
+	    }
 
 	    nodeSizes[i] = 6;
 	    nodes_obj_idx[node]= i*3;
@@ -357,12 +378,24 @@
 	      positionLine[i * 6 + 4] = nodes_obj[node_b_id].getFeature('coords').y - dims.AVG_Y;
 	      positionLine[i * 6 + 5] = nodes_obj[node_b_id].getFeature('coords').z - dims.AVG_Z;
 
-	      lineColors[i * 6] = nodes_obj[node_a_id].getFeature('color').r/256.0;
-	      lineColors[i * 6 + 1] = nodes_obj[node_a_id].getFeature('color').g/256.0;
-	      lineColors[i * 6 + 2] = nodes_obj[node_a_id].getFeature('color').b/256.0;
-	      lineColors[i * 6 + 3] = nodes_obj[node_b_id].getFeature('color').r/256.0;
-	      lineColors[i * 6 + 4] = nodes_obj[node_b_id].getFeature('color').g/256.0;
-	      lineColors[i * 6 + 5] = nodes_obj[node_b_id].getFeature('color').b/256.0;
+	      if ( nodes_obj[node].getFeature('color') ) {
+	        lineColors[i * 6] = nodes_obj[node_a_id].getFeature('color').r/256.0;
+	        lineColors[i * 6 + 1] = nodes_obj[node_a_id].getFeature('color').g/256.0;
+	        lineColors[i * 6 + 2] = nodes_obj[node_a_id].getFeature('color').b/256.0;
+	        lineColors[i * 6 + 3] = nodes_obj[node_b_id].getFeature('color').r/256.0;
+	        lineColors[i * 6 + 4] = nodes_obj[node_b_id].getFeature('color').g/256.0;
+	        lineColors[i * 6 + 5] = nodes_obj[node_b_id].getFeature('color').b/256.0;
+	      }
+	      else {
+	        var j = i * 6;
+	        lineColors[j++] = defaults.edge_color.r/256.0;
+	        lineColors[j++] = defaults.edge_color.g/256.0;
+	        lineColors[j++] = defaults.edge_color.b/256.0;
+	        lineColors[j++] = defaults.edge_color.r/256.0;
+	        lineColors[j++] = defaults.edge_color.g/256.0;
+	        lineColors[j++] = defaults.edge_color.b/256.0;        
+	      }
+
 
 	      edges_obj_idx[edge_index] = i*6;
 	      i++;
@@ -391,6 +424,7 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var force = __webpack_require__(1).force_layout;
+	var switchToFullScreen = __webpack_require__(5).switchToFullScreen;
 
 	if(localStorage.getItem("directed") == 1) {
 	  document.querySelector("#directed").checked = true;
@@ -418,18 +452,29 @@
 
 	function startStopForce() {
 	  //start force directed layout
-	  if(!document.querySelector("#myonoffswitch").checked) {
-	    document.querySelector("#updateAllNodesButton").style.visibility="hidden";
-	    document.querySelector("#chosenHideNodeButton").style.visibility="hidden";
-	    document.querySelector("#chosenUpdateNodeButton").style.visibility="hidden";
+	  if(!document.querySelector("#forceLayoutSwitch").checked) {
+	    // document.querySelector("#updateAllNodesButton").style.visibility="hidden";
+	    // document.querySelector("#chosenHideNodeButton").style.visibility="hidden";
+	    // document.querySelector("#chosenUpdateNodeButton").style.visibility="hidden";
 	    force.fdLoop();
 	  }
 	  //stop force directed layout
 	  else {
-	    document.querySelector("#updateAllNodesButton").style.visibility="visible";
-	    document.querySelector("#chosenHideNodeButton").style.visibility="visible";
-	    document.querySelector("#chosenUpdateNodeButton").style.visibility="visible";
+	    // document.querySelector("#updateAllNodesButton").style.visibility="visible";
+	    // document.querySelector("#chosenHideNodeButton").style.visibility="visible";
+	    // document.querySelector("#chosenUpdateNodeButton").style.visibility="visible";
 	    force.fdStop();
+	  }
+	}
+
+	function startStopHistory() {
+	  if(!document.querySelector("#historySwitch").checked) {
+	    console.log("History OFF...");
+	    // force.fdLoop();
+	  }
+	  else {
+	    console.log("History ON...");
+	    // force.fdStop();
 	  }
 	}
 
@@ -445,14 +490,96 @@
 	  document.querySelector("#force_speed_display").innerHTML = speed;
 	});
 
+	document.querySelector("#force_speed").addEventListener('input', function(event) {
+	  var speed = +document.querySelector("#force_speed").value;
+	  force.speed = speed;
+	  document.querySelector("#force_speed_display").innerHTML = speed;
+	});
+
 	module.exports = {
 	  startStopForce: startStopForce,
+	  startStopHistory: startStopHistory,
 	  setDirectionUnchecked: setDirectionUnchecked
 	};
 
 
 /***/ },
 /* 5 */
+/***/ function(module, exports) {
+
+	var FSelem = {
+	      el: null,
+	      width: null,
+	      height: null
+	    };
+
+	function switchToFullScreen(elem_string) {
+	  // console.log(elem_string);
+	  var elem = document.querySelector(elem_string);
+	  // console.log(elem);
+	  var canvas = document.querySelector(elem_string + " canvas");
+	  // console.log(canvas);
+	  
+	  if (elem) {
+	    FSelem = {
+	      el: elem,
+	      width: elem.clientWidth,
+	      height: elem.clientHeight
+	    }
+	    // console.log(elem);
+	    if (elem.requestFullscreen) {
+	      elem.requestFullscreen();
+	    } else if (elem.msRequestFullscreen) {
+	      elem.msRequestFullscreen();
+	    } else if (elem.mozRequestFullScreen) {
+	      elem.mozRequestFullScreen();
+	    } else if (elem.webkitRequestFullscreen) {
+	      elem.webkitRequestFullscreen();
+	    }
+	    canvas.width = window.innerWidth;
+	    canvas.height = window.innerHeight;
+	    canvas.focus();
+	  }
+	  else {
+	    alert("Element to full-screen does not exist...");
+	  }
+	}
+
+	function FShandler( event ) {
+	  var fullscreenElement = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement;
+	  var fullscreenEnabled = document.fullscreenEnabled || document.mozFullScreenEnabled || document.webkitFullscreenEnabled;
+	  if ( fullscreenElement ) {
+	      // console.log("fullscreen enabled!");
+	      fullscreenElement.style.width = "100%";
+	      fullscreenElement.style.height = "100%";
+	  }
+	  else {
+	      // console.log("fullscreen disabled!");
+	      // we can't get the element that WAS in fullscreen,
+	      // so we fall back to a manual entry...
+	      // console.log(FSelem);
+	      FSelem.el.style.width = FSelem.width+"px";
+	      FSelem.el.style.height = FSelem.height+"px";
+	  }
+	}
+
+	function setAndUpdateNrMutilate() {
+	  var val = document.querySelector("#nr_mutilate_per_frame").value;
+	  document.querySelector("#nr_mutilate_per_frame_val").innerHTML = val;
+	  window.$GV.setNrMutilate(val);
+	}
+
+	document.addEventListener("fullscreenchange", FShandler);
+	document.addEventListener("webkitfullscreenchange", FShandler);
+	document.addEventListener("mozfullscreenchange", FShandler);
+	document.addEventListener("MSFullscreenChange", FShandler);
+
+	module.exports = {
+	  switchToFullScreen: switchToFullScreen
+	}
+
+/***/ },
+/* 6 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var network = __webpack_require__(1).globals.network;
@@ -843,18 +970,19 @@
 	  colorPFS: colorPFS,
 	  colorBFSclick: colorBFSclick,
 	  colorDFSclick: colorDFSclick,
-	  colorPFSclick: colorPFSclick
+	  colorPFSclick: colorPFSclick,
+	  colorDistMap: colorDistMap
 	};
 
 
 /***/ },
-/* 6 */
+/* 7 */
 /***/ function(module, exports) {
 
 	
 
 /***/ },
-/* 7 */
+/* 8 */
 /***/ function(module, exports) {
 
 	
@@ -876,13 +1004,13 @@
 
 
 /***/ },
-/* 8 */
+/* 9 */
 /***/ function(module, exports) {
 
 	
 
 /***/ },
-/* 9 */
+/* 10 */
 /***/ function(module, exports) {
 
 	function readJSON(event, explicit, direction, weighted_mode) {
@@ -949,7 +1077,7 @@
 
 
 /***/ },
-/* 10 */
+/* 11 */
 /***/ function(module, exports, __webpack_require__) {
 
 	
@@ -1080,77 +1208,10 @@
 
 
 /***/ },
-/* 11 */
-/***/ function(module, exports) {
-
-	
-
-/***/ },
 /* 12 */
 /***/ function(module, exports) {
 
-	var FSelem = {
-	      el: null,
-	      width: null,
-	      height: null
-	    };
-
-	function switchToFullScreen(elem_string) {
-	  var elem = document.querySelector(elem_string);
-	  var canvas = document.querySelector(elem_string + " canvas");
-	  console.log(canvas);
-	  if (elem) {
-	    FSelem = {
-	      el: elem,
-	      width: elem.clientWidth,
-	      height: elem.clientHeight
-	    }
-	    // console.log(elem);
-	    if (elem.requestFullscreen) {
-	      elem.requestFullscreen();
-	    } else if (elem.msRequestFullscreen) {
-	      elem.msRequestFullscreen();
-	    } else if (elem.mozRequestFullScreen) {
-	      elem.mozRequestFullScreen();
-	    } else if (elem.webkitRequestFullscreen) {
-	      elem.webkitRequestFullscreen();
-	    }
-	    canvas.focus();
-	  }
-	  else {
-	    alert("Element to full-screen does not exist...");
-	  }
-	}
-
-	function FShandler( event ) {
-	  var fullscreenElement = document.fullscreenElement || document.mozFullScreenElement || document.webkitFullscreenElement;
-	  var fullscreenEnabled = document.fullscreenEnabled || document.mozFullScreenEnabled || document.webkitFullscreenEnabled;
-	  if ( fullscreenElement ) {
-	      // console.log("fullscreen enabled!");
-	      fullscreenElement.style.width = "100%";
-	      fullscreenElement.style.height = "100%";
-	  }
-	  else {
-	      // console.log("fullscreen disabled!");
-	      // we can't get the element that WAS in fullscreen,
-	      // so we fall back to a manual entry...
-	      // console.log(FSelem);
-	      FSelem.el.style.width = FSelem.width+"px";
-	      FSelem.el.style.height = FSelem.height+"px";
-	  }
-	}
-
-	function setAndUpdateNrMutilate() {
-	  var val = document.querySelector("#nr_mutilate_per_frame").value;
-	  document.querySelector("#nr_mutilate_per_frame_val").innerHTML = val;
-	  window.$GV.setNrMutilate(val);
-	}
-
-	document.addEventListener("fullscreenchange", FShandler);
-	document.addEventListener("webkitfullscreenchange", FShandler);
-	document.addEventListener("mozfullscreenchange", FShandler);
-	document.addEventListener("MSFullscreenChange", FShandler);
-
+	
 
 /***/ },
 /* 13 */
@@ -1611,18 +1672,18 @@
 	    var max_x = globals.graph_dims.MAX_X;
 	    var max_y = globals.graph_dims.MAX_Y;
 
-	    if(globals.camera.position.x > max_x) {
-	      globals.camera.position.x = max_x;
-	    }
-	    else if(globals.camera.position.x < -max_x) {
-	      globals.camera.position.x = -max_x;
-	    }
-	    else if(globals.camera.position.y > max_y) {
-	      globals.camera.position.y = max_y;
-	    }
-	    else if(globals.camera.position.y < -max_y) {
-	      globals.camera.position.y = -max_y;
-	    }
+	    // if(globals.camera.position.x > max_x) {
+	    //   globals.camera.position.x = max_x;
+	    // }
+	    // else if(globals.camera.position.x < -max_x) {
+	    //   globals.camera.position.x = -max_x;
+	    // }
+	    // else if(globals.camera.position.y > max_y) {
+	    //   globals.camera.position.y = max_y;
+	    // }
+	    // else if(globals.camera.position.y < -max_y) {
+	    //   globals.camera.position.y = -max_y;
+	    // }
 
 	    //movement in y: up is negative, down is positive
 	    globals.camera.position.x = globals.camera.position.x - (mouseX * event.movementX);

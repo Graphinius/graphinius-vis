@@ -14,8 +14,8 @@ gulp.task('browserSync', function() {
     }
   });
 
-  gulp.watch('*.html').on('change', browserSync.reload);
-  gulp.watch('src/**/*.js').on('change', browserSync.reload);
+  gulp.watch('src/**/*.js', ['pack']); //.on('change', browserSync.reload);
+  gulp.watch(['*.html', 'build/*.js']).on('change', browserSync.reload);
 });
 
 // Packaging - Webpack
