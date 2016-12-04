@@ -4,3 +4,4 @@ json/**/*
 bundle/**/*
 .idea/**/*
 .vscode
+yarn.lock

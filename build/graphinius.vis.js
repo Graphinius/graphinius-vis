@@ -1014,6 +1014,7 @@
 /***/ function(module, exports) {
 
 	function readJSON(event, explicit, direction, weighted_mode) {
+	  var startTime = +(new Date);
 	  var explicit = typeof explicit === 'undefined' ? false : explicit;
 	  var direction = typeof direction === 'undefined' ? false : direction;
 	  var weighted_mode = typeof weighted_mode === 'undefined' ? false : weighted_mode;
@@ -1059,9 +1060,12 @@
 	      var parsedFile = JSON.parse(event.target.result);
 	      window.graph = json.readFromJSON(parsedFile);
 
-	      document.querySelector("#nodes").innerHTML = parsedFile.nodes;
-	      document.querySelector("#edges").innerHTML = parsedFile.edges;
-	      //document.querySelector("#time").innerHTML = parsedFile.edges;
+	      document.querySelector("#nodes").innerHTML = window.graph.nrNodes();
+	      document.querySelector("#dir-edges").innerHTML = window.graph.nrDirEdges();
+	      document.querySelector("#und-edges").innerHTML = window.graph.nrUndEdges();
+
+	      var endTime = +(new Date);
+	      document.querySelector("#time").innerHTML = (endTime - startTime) + ' ms.';
 
 	      result = parsedFile.data;
 	    }
