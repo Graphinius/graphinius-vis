@@ -1,18 +1,12 @@
+canvas {
+  margin: 0;
+  padding: 0;
+}
+
 ul {
   list-style: none
 }
 
-.container {
-	display: -ms-flex;
-	display: -webkit-flex;
-	display: flex;
-}
-
-.container > div {
-	/*width: 25%;*/
-	padding: 10px;
-  flex-grow: 1;
-}
 
 body {
   font-family: "Sans-Serif", "Calibri";
@@ -20,6 +14,8 @@ body {
   background: black;
   color: white;
   overflow: hidden;
+  margin: 0;
+  padding: 0;
 }
 
 h1 {
@@ -46,6 +42,7 @@ h1 {
   left: 0;
   bottom: 0;
   width: 220px;
+  padding-left: 5px;
   background-color: rgba(0, 0, 0, 0.3); 
 }
 
@@ -141,7 +138,7 @@ h1 {
 #nav-legend {
   position: absolute;
   bottom: 12;
-  left: 250px;
+  left: 239px;
   width: 280px;
   border-radius: 3px;
   color: #FFFFFF;
