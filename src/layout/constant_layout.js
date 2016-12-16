@@ -40,7 +40,7 @@ function renderGraph(graph) {
   globals.renderer.setSize(container.WIDTH, container.HEIGHT);
   globals.renderer.setClearColor(defaults.background_color, 1);
 
-  var element = document.getElementById("containerGraph");
+  var element = document.getElementById("main_vis");
   element.appendChild(globals.renderer.domElement);
 
   var i = 0;

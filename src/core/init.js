@@ -19,8 +19,8 @@ var config = {
   // default size of canvas/container
   container: {
     element: document.querySelector("#main_vis"),
-    WIDTH: 1200,
-    HEIGHT: 900
+    WIDTH: window.innerWidth,
+    HEIGHT: window.innerHeight
   },
   // default render parameters
   defaults: {
@@ -33,7 +33,7 @@ var config = {
     //camera settings
     fov: 50,
     near: 0.1,
-    far: 5000,
+    far: 50000,
     
     //raycaster
     highlight_node_color: new THREE.Color(0xf1ecfb),
@@ -115,3 +115,4 @@ var config = {
   }
 };
 module.exports = config;
+

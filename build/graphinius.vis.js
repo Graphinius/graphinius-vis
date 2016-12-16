@@ -120,8 +120,8 @@
 	  // default size of canvas/container
 	  container: {
 	    element: document.querySelector("#main_vis"),
-	    WIDTH: 1200,
-	    HEIGHT: 900
+	    WIDTH: window.innerWidth,
+	    HEIGHT: window.innerHeight
 	  },
 	  // default render parameters
 	  defaults: {
@@ -134,7 +134,7 @@
 	    //camera settings
 	    fov: 50,
 	    near: 0.1,
-	    far: 5000,
+	    far: 50000,
 	    
 	    //raycaster
 	    highlight_node_color: new THREE.Color(0xf1ecfb),
@@ -216,6 +216,7 @@
 	  }
 	};
 	module.exports = config;
+
 
 
 /***/ },
@@ -307,7 +308,7 @@
 	  globals.renderer.setSize(container.WIDTH, container.HEIGHT);
 	  globals.renderer.setClearColor(defaults.background_color, 1);
 
-	  var element = document.getElementById("containerGraph");
+	  var element = document.getElementById("main_vis");
 	  element.appendChild(globals.renderer.domElement);
 
 	  var i = 0;
@@ -502,6 +503,22 @@
 	  setDirectionUnchecked: setDirectionUnchecked
 	};
 
+
+
+	/**
+	 * A vew standard view functions
+	 */
+
+	var globals = __webpack_require__(1).globals;
+
+
+	window.addEventListener( 'resize', onWindowResize, false );
+
+	function onWindowResize() {
+	    globals.camera.aspect = window.innerWidth / window.innerHeight;
+	    globals.camera.updateProjectionMatrix();
+	    globals.renderer.setSize( window.innerWidth, window.innerHeight );
+	}
 
 /***/ },
 /* 5 */
@@ -1698,7 +1715,7 @@
 	  // calculate mouse position in normalized device coordinates
 	  // (-1 to +1) for both components
 	  event.preventDefault();
-	  var element = document.querySelector('#containerGraph');
+	  var element = document.querySelector('#main_vis');
 	  var rect = element.getBoundingClientRect();
 	  mouse.x = ((event.clientX - rect.left) / container.WIDTH) * 2 - 1;
 	  mouse.y = - ((event.clientY - rect.top) / container.HEIGHT) * 2 + 1;

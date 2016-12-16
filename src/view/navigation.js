@@ -156,7 +156,7 @@ function mouseMove(event) {
   // calculate mouse position in normalized device coordinates
   // (-1 to +1) for both components
   event.preventDefault();
-  var element = document.querySelector('#containerGraph');
+  var element = document.querySelector('#main_vis');
   var rect = element.getBoundingClientRect();
   mouse.x = ((event.clientX - rect.left) / container.WIDTH) * 2 - 1;
   mouse.y = - ((event.clientY - rect.top) / container.HEIGHT) * 2 + 1;

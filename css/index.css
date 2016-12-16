@@ -14,10 +14,6 @@ ul {
   flex-grow: 1;
 }
 
-.container > div:nth-child(1) {
-    flex: 0 0 350px;
-}
-
 body {
   font-family: "Sans-Serif", "Calibri";
   font-size: 14px;
@@ -37,38 +33,37 @@ h1 {
   font-size: 14px;
 }
 
-#graphVis {
+
+#main_vis {
   width: 100%;
-  position: relative;
+  height: 100%;
 }
 
-#containerGraph, #containerNgraph {
-  position: absolute;
-  /*background-color: grey;*/
-  width: 1500px;
-  height: 900px;
-  /*display: none;*/
+
+#main_controls {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 220px;
+  background-color: rgba(0, 0, 0, 0.3); 
 }
+
 
 #nodeInfo {
   color: white;
-  position: absolute;
+  position: fixed;
+  top: 0;
   right: 0;
-  top: 5px;
+  bottom: 0;
   width: 200px;
-  height: 800px;
+  padding-top: 50px;
   z-index: 20;
   font-size: 18px;
-  background-color: rgba(0, 0, 0, 0.7);
+  background-color: rgba(0, 0, 0, 0.3);
   visibility: hidden;
 }
 
-/* DOES NOT WORK AS SPECIFIED
-#containerGraph:fullscreen {
-	width: 100%;
-  height: 100%;
-}
-*/
 
 #fullscreenSwitch {
   position: absolute;
@@ -145,16 +140,14 @@ h1 {
 
 #nav-legend {
   position: absolute;
-  top: 5px;
-  left: 0px;
+  bottom: 12;
+  left: 250px;
   width: 280px;
   border-radius: 3px;
   color: #FFFFFF;
   font-size: 18px;
   padding: 15px;
-  background-color: rgba(0, 0, 0, 0.6);
-  
-  
+  background-color: rgba(0, 0, 0, 0.3);
 }
 
 .title {

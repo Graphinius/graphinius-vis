@@ -76,3 +76,20 @@ module.exports = {
   startStopHistory: startStopHistory,
   setDirectionUnchecked: setDirectionUnchecked
 };
+
+
+
+/**
+ * A vew standard view functions
+ */
+
+var globals = require("../core/init.js").globals;
+
+
+window.addEventListener( 'resize', onWindowResize, false );
+
+function onWindowResize() {
+    globals.camera.aspect = window.innerWidth / window.innerHeight;
+    globals.camera.updateProjectionMatrix();
+    globals.renderer.setSize( window.innerWidth, window.innerHeight );
+}
