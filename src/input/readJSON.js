@@ -11,7 +11,7 @@ function readJSON(event, explicit, direction, weighted_mode) {
     direction = true;
   }
   
-  var json = new $G.input.JsonInput(explicit, direction, weighted_mode);
+  var json = new $G.input.JSONInput(explicit, direction, weighted_mode);
 
   //checks if the browser supports the file API
   if (!window.File && window.FileReader && window.FileList && window.Blob) {

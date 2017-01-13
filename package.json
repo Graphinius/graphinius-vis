@@ -35,6 +35,6 @@
     "webpack-stream": "^3.1.0"
   },
   "dependencies": {
-    "graphinius": "^0.3.5"
+    "graphinius": "^0.4.7"
   }
 }
