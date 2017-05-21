@@ -45,6 +45,8 @@ function fdLoop() {
  */
 function init() {
   now = +new Date;
+  // reset bodies
+  bodies = [];
   nodes = graph.getNodes();
   old_coordinates = new Float32Array(graph.nrNodes() * 3);
   var nodes = graph.getNodes(),
@@ -104,54 +106,50 @@ function forceDirectedLayout() {
     body.pos.y += body.velocity.y;
 
     // Set new position for graph node
-    // coords = nodes[body.id].getFeature('coords').x = body.pos.x;
-    // coords = nodes[body.id].getFeature('coords').y = body.pos.y;
+    coords = nodes[body.id].getFeature('coords').x = body.pos.x;
+    coords = nodes[body.id].getFeature('coords').y = body.pos.y;
 
     // Set new node position for WebGL
     var index = nodes_obj_idx[body.id];
-    old_nodes[index] = body.pos.x; // nodes[body.id].getFeature('coords').x;
-    old_nodes[index + 1] = body.pos.y; // nodes[body.id].getFeature('coords').y;
-
-
-    // Set new edge positions for WebGL
-    // var undEdges = [ network.children[1].geometry.getAttribute('position').array,
-    //               graph.getUndEdges()],
-    // dirEdges = [ network.children[2].geometry.getAttribute('position').array,
-    //               graph.getDirEdges()];
-                  
-    // [undEdges, dirEdges].forEach(function(all_edges_of_a_node) {
-    //   var i = 0;
-    //   var old_edges = all_edges_of_a_node[0];
-    //   var edges = all_edges_of_a_node[1];
-    //   for (var edge_index in edges) {
-    //     var edge = edges[edge_index];
-    //     var node_a_id = edge._node_a.getID();
-    //     var node_b_id = edge._node_b.getID();
-
-    //     old_edges[i] = nodes[node_a_id].getFeature('coords').x;
-    //     old_edges[i + 1] = nodes[node_a_id].getFeature('coords').y;
-    //     old_edges[i + 3] = nodes[node_b_id].getFeature('coords').x;
-    //     old_edges[i + 4] = nodes[node_b_id].getFeature('coords').y;
-
-    //     // if ( globals.TWO_D_MODE ) {
-    //     //   old_edges[i + 2] = 0;
-    //     //   old_edges[i + 5] = 0;
-    //     // } else {
-    //     //   old_edges[i + 2] = nodes[node_a_id].getFeature('coords').z;
-    //     //   old_edges[i + 5] = nodes[node_b_id].getFeature('coords').z;
-    //     // }
-    //     i += 6;
-    //   }
-      
-    // });
-
+    old_nodes[index] = nodes[body.id].getFeature('coords').x;
+    old_nodes[index + 1] = nodes[body.id].getFeature('coords').y;
   });
-  // console.log(bodies[0].pos);
-  
-  // At this point every body object has valid 2d force vecor
-  // console.dir(bodies[0].force);
-  
 
+  // console.log(bodies[0].velocity);
+
+  // Set new edge positions for WebGL
+  var undEdges = [ network.children[1].geometry.getAttribute('position').array,
+                graph.getUndEdges()],
+  dirEdges = [ network.children[2].geometry.getAttribute('position').array,
+                graph.getDirEdges()];
+                
+  [undEdges, dirEdges].forEach(function(all_edges_of_a_node) {
+    var i = 0;
+    var old_edges = all_edges_of_a_node[0];
+    var edges = all_edges_of_a_node[1];
+    for (var edge_index in edges) {
+      var edge = edges[edge_index];
+      var node_a_id = edge._node_a.getID();
+      var node_b_id = edge._node_b.getID();
+
+      old_edges[i] = nodes[node_a_id].getFeature('coords').x;
+      old_edges[i + 1] = nodes[node_a_id].getFeature('coords').y;
+      old_edges[i + 3] = nodes[node_b_id].getFeature('coords').x;
+      old_edges[i + 4] = nodes[node_b_id].getFeature('coords').y;
+
+      // if ( globals.TWO_D_MODE ) {
+      //   old_edges[i + 2] = 0;
+      //   old_edges[i + 5] = 0;
+      // } else {
+      //   old_edges[i + 2] = nodes[node_a_id].getFeature('coords').z;
+      //   old_edges[i + 5] = nodes[node_b_id].getFeature('coords').z;
+      // }
+      i += 6;
+    }
+    
+  });
+  
+  // Update WebGL matrix
   network.children[0].geometry.attributes.position.needsUpdate = true;
   network.children[1].geometry.attributes.position.needsUpdate = true;
   network.children[2].geometry.attributes.position.needsUpdate = true;

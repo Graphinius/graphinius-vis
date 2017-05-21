@@ -42,7 +42,7 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {var init            = __webpack_require__(1),
 	    render          = __webpack_require__(2),
@@ -95,9 +95,9 @@
 
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
-/***/ }),
+/***/ },
 /* 1 */
-/***/ (function(module, exports) {
+/***/ function(module, exports) {
 
 	// window.$G = require('graphinius').$G;
 
@@ -219,9 +219,9 @@
 
 
 
-/***/ }),
+/***/ },
 /* 2 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	var container = __webpack_require__(1).container;
 	var globals = __webpack_require__(1).globals;
@@ -262,9 +262,9 @@
 	};
 
 
-/***/ }),
+/***/ },
 /* 3 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	var container = __webpack_require__(1).container;
 	var defaults = __webpack_require__(1).defaults;
@@ -282,8 +282,8 @@
 	);
 
 	function renderGraph(graph) {
-	  console.log(defaults.edge_color);
-	  console.log(defaults.node_color);
+	  // console.log(defaults.edge_color);
+	  // console.log(defaults.node_color);
 	  
 	  dims.MIN_X = dims.MIN_Y = dims.MIN_Z = Number.POSITIVE_INFINITY;
 	  dims.MAX_X = dims.MAX_Y = dims.MAX_Z = Number.NEGATIVE_INFINITY;
@@ -420,9 +420,9 @@
 	};
 
 
-/***/ }),
+/***/ },
 /* 4 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	var force = __webpack_require__(1).force_layout;
 	var switchToFullScreen = __webpack_require__(5).switchToFullScreen;
@@ -520,9 +520,9 @@
 	    globals.renderer.setSize( window.innerWidth, window.innerHeight );
 	}
 
-/***/ }),
+/***/ },
 /* 5 */
-/***/ (function(module, exports) {
+/***/ function(module, exports) {
 
 	var FSelem = {
 	      el: null,
@@ -595,9 +595,9 @@
 	  switchToFullScreen: switchToFullScreen
 	}
 
-/***/ }),
+/***/ },
 /* 6 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	var network = __webpack_require__(1).globals.network;
 	var update = __webpack_require__(2).update;
@@ -992,15 +992,15 @@
 	};
 
 
-/***/ }),
+/***/ },
 /* 7 */
-/***/ (function(module, exports) {
+/***/ function(module, exports) {
 
 	
 
-/***/ }),
+/***/ },
 /* 8 */
-/***/ (function(module, exports) {
+/***/ function(module, exports) {
 
 	
 	/**
@@ -1020,15 +1020,15 @@
 	window.requestAnimationFrame(main_loop);
 
 
-/***/ }),
+/***/ },
 /* 9 */
-/***/ (function(module, exports) {
+/***/ function(module, exports) {
 
 	
 
-/***/ }),
+/***/ },
 /* 10 */
-/***/ (function(module, exports) {
+/***/ function(module, exports) {
 
 	function readJSON(event, explicit, direction, weighted_mode) {
 	  var startTime = +(new Date);
@@ -1097,9 +1097,9 @@
 	};
 
 
-/***/ }),
+/***/ },
 /* 11 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	var INIT = __webpack_require__(1);
 	var defaults = INIT.defaults;
@@ -1227,9 +1227,9 @@
 	force.fdStop = fdStop;
 
 
-/***/ }),
+/***/ },
 /* 12 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	var INIT = __webpack_require__(1);
 	var defaults = INIT.defaults;
@@ -1278,6 +1278,8 @@
 	 */
 	function init() {
 	  now = +new Date;
+	  // reset bodies
+	  bodies = [];
 	  nodes = graph.getNodes();
 	  old_coordinates = new Float32Array(graph.nrNodes() * 3);
 	  var nodes = graph.getNodes(),
@@ -1337,54 +1339,50 @@
 	    body.pos.y += body.velocity.y;
 
 	    // Set new position for graph node
-	    // coords = nodes[body.id].getFeature('coords').x = body.pos.x;
-	    // coords = nodes[body.id].getFeature('coords').y = body.pos.y;
+	    coords = nodes[body.id].getFeature('coords').x = body.pos.x;
+	    coords = nodes[body.id].getFeature('coords').y = body.pos.y;
 
 	    // Set new node position for WebGL
 	    var index = nodes_obj_idx[body.id];
-	    old_nodes[index] = body.pos.x; // nodes[body.id].getFeature('coords').x;
-	    old_nodes[index + 1] = body.pos.y; // nodes[body.id].getFeature('coords').y;
-
-
-	    // Set new edge positions for WebGL
-	    // var undEdges = [ network.children[1].geometry.getAttribute('position').array,
-	    //               graph.getUndEdges()],
-	    // dirEdges = [ network.children[2].geometry.getAttribute('position').array,
-	    //               graph.getDirEdges()];
-	                  
-	    // [undEdges, dirEdges].forEach(function(all_edges_of_a_node) {
-	    //   var i = 0;
-	    //   var old_edges = all_edges_of_a_node[0];
-	    //   var edges = all_edges_of_a_node[1];
-	    //   for (var edge_index in edges) {
-	    //     var edge = edges[edge_index];
-	    //     var node_a_id = edge._node_a.getID();
-	    //     var node_b_id = edge._node_b.getID();
-
-	    //     old_edges[i] = nodes[node_a_id].getFeature('coords').x;
-	    //     old_edges[i + 1] = nodes[node_a_id].getFeature('coords').y;
-	    //     old_edges[i + 3] = nodes[node_b_id].getFeature('coords').x;
-	    //     old_edges[i + 4] = nodes[node_b_id].getFeature('coords').y;
-
-	    //     // if ( globals.TWO_D_MODE ) {
-	    //     //   old_edges[i + 2] = 0;
-	    //     //   old_edges[i + 5] = 0;
-	    //     // } else {
-	    //     //   old_edges[i + 2] = nodes[node_a_id].getFeature('coords').z;
-	    //     //   old_edges[i + 5] = nodes[node_b_id].getFeature('coords').z;
-	    //     // }
-	    //     i += 6;
-	    //   }
-	      
-	    // });
-
+	    old_nodes[index] = nodes[body.id].getFeature('coords').x;
+	    old_nodes[index + 1] = nodes[body.id].getFeature('coords').y;
 	  });
-	  // console.log(bodies[0].pos);
-	  
-	  // At this point every body object has valid 2d force vecor
-	  // console.dir(bodies[0].force);
-	  
 
+	  // console.log(bodies[0].velocity);
+
+	  // Set new edge positions for WebGL
+	  var undEdges = [ network.children[1].geometry.getAttribute('position').array,
+	                graph.getUndEdges()],
+	  dirEdges = [ network.children[2].geometry.getAttribute('position').array,
+	                graph.getDirEdges()];
+	                
+	  [undEdges, dirEdges].forEach(function(all_edges_of_a_node) {
+	    var i = 0;
+	    var old_edges = all_edges_of_a_node[0];
+	    var edges = all_edges_of_a_node[1];
+	    for (var edge_index in edges) {
+	      var edge = edges[edge_index];
+	      var node_a_id = edge._node_a.getID();
+	      var node_b_id = edge._node_b.getID();
+
+	      old_edges[i] = nodes[node_a_id].getFeature('coords').x;
+	      old_edges[i + 1] = nodes[node_a_id].getFeature('coords').y;
+	      old_edges[i + 3] = nodes[node_b_id].getFeature('coords').x;
+	      old_edges[i + 4] = nodes[node_b_id].getFeature('coords').y;
+
+	      // if ( globals.TWO_D_MODE ) {
+	      //   old_edges[i + 2] = 0;
+	      //   old_edges[i + 5] = 0;
+	      // } else {
+	      //   old_edges[i + 2] = nodes[node_a_id].getFeature('coords').z;
+	      //   old_edges[i + 5] = nodes[node_b_id].getFeature('coords').z;
+	      // }
+	      i += 6;
+	    }
+	    
+	  });
+	  
+	  // Update WebGL matrix
 	  network.children[0].geometry.attributes.position.needsUpdate = true;
 	  network.children[1].geometry.attributes.position.needsUpdate = true;
 	  network.children[2].geometry.attributes.position.needsUpdate = true;
@@ -1411,9 +1409,9 @@
 	  this.velocity = {x: 0, y: 0}
 	}
 
-/***/ }),
+/***/ },
 /* 13 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	/**
 	 * This is Barnes Hut simulation algorithm for 2d case. Implementation
@@ -1744,9 +1742,9 @@
 	}
 
 
-/***/ }),
+/***/ },
 /* 14 */
-/***/ (function(module, exports) {
+/***/ function(module, exports) {
 
 	module.exports = {
 	  random: random,
@@ -1835,9 +1833,9 @@
 	}
 
 
-/***/ }),
+/***/ },
 /* 15 */
-/***/ (function(module, exports) {
+/***/ function(module, exports) {
 
 	/**
 	 * Internal data structure to represent 2D QuadTree node
@@ -1871,9 +1869,9 @@
 	};
 
 
-/***/ }),
+/***/ },
 /* 16 */
-/***/ (function(module, exports) {
+/***/ function(module, exports) {
 
 	module.exports = InsertStack;
 
@@ -1919,9 +1917,9 @@
 	}
 
 
-/***/ }),
+/***/ },
 /* 17 */
-/***/ (function(module, exports) {
+/***/ function(module, exports) {
 
 	module.exports = function isSamePosition(point1, point2) {
 	    var dx = Math.abs(point1.x - point2.x);
@@ -1931,9 +1929,9 @@
 	};
 
 
-/***/ }),
+/***/ },
 /* 18 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	var network = __webpack_require__(1).globals.network;
 	var update = __webpack_require__(2).update;
@@ -2250,9 +2248,9 @@
 	};
 
 
-/***/ }),
+/***/ },
 /* 19 */
-/***/ (function(module, exports, __webpack_require__) {
+/***/ function(module, exports, __webpack_require__) {
 
 	var keys = __webpack_require__(1).keys;
 	var globals = __webpack_require__(1).globals;
@@ -2446,5 +2444,5 @@
 	};
 
 
-/***/ })
+/***/ }
 /******/ ]);
