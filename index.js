@@ -6,8 +6,8 @@ var init            = require("./src/core/init.js"),
     readCSV         = require("./src/input/readCSV.js"),
     readJSON        = require("./src/input/readJSON.js"),
     const_layout    = require("./src/layout/constant_layout.js"),
+    sine_swing      = require("./src/layout/sine_swing.js"),
     force_layout    = require("./src/layout/force_directed.js"),
-    generic_layout  = require("./src/layout/generic_layout.js"),
     fullscreen      = require("./src/view/fullscreen.js"),
     interaction     = require("./src/view/interaction.js"),
     navigation      = require("./src/view/navigation.js"),
@@ -32,8 +32,8 @@ out.$GV = {
   },
   layout: {
     const: const_layout,
-    force: force_layout,
-    generic: generic_layout
+    sine: sine_swing,
+    force: force_layout
   },
   view: {
     fullscreen: fullscreen,

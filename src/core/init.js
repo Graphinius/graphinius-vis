@@ -33,14 +33,14 @@ var config = {
     //camera settings
     fov: 50,
     near: 0.1,
-    far: 50000,
+    far: 1e6,
     
     //raycaster
     highlight_node_color: new THREE.Color(0xf1ecfb),
 
     //zoom
     ZOOM_FACTOR: 0.05,
-    MAX_FOV: 12000, //zoom out
+    MAX_FOV: 1e5, //zoom out
     MIN_FOV: 1, //zoom in
 
     //distance to move

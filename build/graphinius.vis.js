@@ -42,7 +42,7 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {var init            = __webpack_require__(1),
 	    render          = __webpack_require__(2),
@@ -52,11 +52,11 @@
 	    readCSV         = __webpack_require__(9),
 	    readJSON        = __webpack_require__(10),
 	    const_layout    = __webpack_require__(3),
-	    force_layout    = __webpack_require__(11),
-	    generic_layout  = __webpack_require__(12),
+	    sine_swing      = __webpack_require__(11),
+	    force_layout    = __webpack_require__(12),
 	    fullscreen      = __webpack_require__(5),
-	    interaction     = __webpack_require__(13),
-	    navigation      = __webpack_require__(14),
+	    interaction     = __webpack_require__(18),
+	    navigation      = __webpack_require__(19),
 	    controlUI       = __webpack_require__(4);
 
 
@@ -78,8 +78,8 @@
 	  },
 	  layout: {
 	    const: const_layout,
-	    force: force_layout,
-	    generic: generic_layout
+	    sine: sine_swing,
+	    force: force_layout
 	  },
 	  view: {
 	    fullscreen: fullscreen,
@@ -95,9 +95,9 @@
 
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
-/***/ },
+/***/ }),
 /* 1 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	// window.$G = require('graphinius').$G;
 
@@ -134,14 +134,14 @@
 	    //camera settings
 	    fov: 50,
 	    near: 0.1,
-	    far: 50000,
+	    far: 1e6,
 	    
 	    //raycaster
 	    highlight_node_color: new THREE.Color(0xf1ecfb),
 
 	    //zoom
 	    ZOOM_FACTOR: 0.05,
-	    MAX_FOV: 12000, //zoom out
+	    MAX_FOV: 1e5, //zoom out
 	    MIN_FOV: 1, //zoom in
 
 	    //distance to move
@@ -219,9 +219,9 @@
 
 
 
-/***/ },
+/***/ }),
 /* 2 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var container = __webpack_require__(1).container;
 	var globals = __webpack_require__(1).globals;
@@ -262,9 +262,9 @@
 	};
 
 
-/***/ },
+/***/ }),
 /* 3 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var container = __webpack_require__(1).container;
 	var defaults = __webpack_require__(1).defaults;
@@ -420,9 +420,9 @@
 	};
 
 
-/***/ },
+/***/ }),
 /* 4 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var force = __webpack_require__(1).force_layout;
 	var switchToFullScreen = __webpack_require__(5).switchToFullScreen;
@@ -520,9 +520,9 @@
 	    globals.renderer.setSize( window.innerWidth, window.innerHeight );
 	}
 
-/***/ },
+/***/ }),
 /* 5 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	var FSelem = {
 	      el: null,
@@ -595,9 +595,9 @@
 	  switchToFullScreen: switchToFullScreen
 	}
 
-/***/ },
+/***/ }),
 /* 6 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var network = __webpack_require__(1).globals.network;
 	var update = __webpack_require__(2).update;
@@ -992,15 +992,15 @@
 	};
 
 
-/***/ },
+/***/ }),
 /* 7 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	
 
-/***/ },
+/***/ }),
 /* 8 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	
 	/**
@@ -1020,15 +1020,15 @@
 	window.requestAnimationFrame(main_loop);
 
 
-/***/ },
+/***/ }),
 /* 9 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	
 
-/***/ },
+/***/ }),
 /* 10 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	function readJSON(event, explicit, direction, weighted_mode) {
 	  var startTime = +(new Date);
@@ -1097,11 +1097,10 @@
 	};
 
 
-/***/ },
+/***/ }),
 /* 11 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
-	
 	var INIT = __webpack_require__(1);
 	var defaults = INIT.defaults;
 	var globals = INIT.globals;
@@ -1228,15 +1227,713 @@
 	force.fdStop = fdStop;
 
 
-/***/ },
+/***/ }),
 /* 12 */
-/***/ function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-	
+	var INIT = __webpack_require__(1);
+	var defaults = INIT.defaults;
+	var globals = INIT.globals;
+	var network = globals.network;
+	var dims = globals.graph_dims;
+	var force = INIT.force_layout;
+	var update = __webpack_require__(2).update;
+	var nodes_obj_idx = __webpack_require__(3).nodes_obj_idx;
 
-/***/ },
+	var now = null,
+	    init_coords = true,
+	    old_coordinates = null,
+	    random_components = null,
+	    first_init = true;
+
+	var nodes;
+	var bodies = [];
+	var body;
+	var coords;
+
+	const SLOW_DOWN_FACTOR = 1e3;
+
+
+	/**
+	 * 
+	 */
+	function fdLoop() {
+	  if(init_coords) {
+	    init();
+	  }
+	  if(!defaults.stop_fd) {    
+	    forceDirectedLayout();
+	    window.requestAnimationFrame(fdLoop);
+	  }
+
+	  // TODO check this out...
+	  else {
+	    init_coords = true;
+	  }
+	}
+
+
+	/**
+	 * 
+	 */
+	function init() {
+	  now = +new Date;
+	  nodes = graph.getNodes();
+	  old_coordinates = new Float32Array(graph.nrNodes() * 3);
+	  var nodes = graph.getNodes(),
+	      i = 0;
+	      
+	  // BAD HACK!!!
+	  var diff_x = first_init ? dims.AVG_X : 0;
+	  var diff_y = first_init ? dims.AVG_Y : 0;
+	  var diff_z = first_init ? dims.AVG_Z : 0;
+	  
+	  // Correct coordinates for viewport
+	  for(node in nodes_obj) {
+	    old_coordinates[i] = nodes[node].getFeature('coords').x - diff_x;
+	    old_coordinates[i + 1] = nodes[node].getFeature('coords').y - diff_y;
+	    old_coordinates[i + 2] = nodes[node].getFeature('coords').z - diff_z;
+	    i += 3;
+	  }
+
+	  // Create new bodies from graph nodes;
+	  for (var nodeID in nodes) {
+	    var coords = nodes[nodeID].getFeature('coords');
+	    bodies.push(new NodeBody(coords.x - diff_x, coords.y - diff_y, nodeID));
+	  }
+	  
+	  first_init = false;
+	  init_coords = false;
+	  defaults.stop_fd = false;
+	}
+
+
+	/**
+	 * 
+	 */
+	function forceDirectedLayout() {
+
+	  nodes = graph.getNodes();
+	  old_nodes = network.children[0].geometry.getAttribute('position').array;
+	  // console.log(old_nodes);
+
+	  // build quad tree:
+	  var createQuadTree = __webpack_require__(13);
+	  var quadTree = createQuadTree();
+
+	  // insert bodies into the quad tree 
+	  quadTree.insertBodies(bodies); // performance: O(n * log n)
+
+	  // calculate forces acting on each body in the tree O(n * log n):
+	  bodies.forEach(function(body) {
+	    quadTree.updateBodyForce(body);
+	  });
+
+	  // Update body position as well as node position
+	  bodies.forEach(function(body) {
+	    body.velocity.x += body.force.x / SLOW_DOWN_FACTOR;
+	    body.velocity.y += body.force.y / SLOW_DOWN_FACTOR;
+	    body.pos.x += body.velocity.x;
+	    body.pos.y += body.velocity.y;
+
+	    // Set new position for graph node
+	    // coords = nodes[body.id].getFeature('coords').x = body.pos.x;
+	    // coords = nodes[body.id].getFeature('coords').y = body.pos.y;
+
+	    // Set new node position for WebGL
+	    var index = nodes_obj_idx[body.id];
+	    old_nodes[index] = body.pos.x; // nodes[body.id].getFeature('coords').x;
+	    old_nodes[index + 1] = body.pos.y; // nodes[body.id].getFeature('coords').y;
+
+
+	    // Set new edge positions for WebGL
+	    // var undEdges = [ network.children[1].geometry.getAttribute('position').array,
+	    //               graph.getUndEdges()],
+	    // dirEdges = [ network.children[2].geometry.getAttribute('position').array,
+	    //               graph.getDirEdges()];
+	                  
+	    // [undEdges, dirEdges].forEach(function(all_edges_of_a_node) {
+	    //   var i = 0;
+	    //   var old_edges = all_edges_of_a_node[0];
+	    //   var edges = all_edges_of_a_node[1];
+	    //   for (var edge_index in edges) {
+	    //     var edge = edges[edge_index];
+	    //     var node_a_id = edge._node_a.getID();
+	    //     var node_b_id = edge._node_b.getID();
+
+	    //     old_edges[i] = nodes[node_a_id].getFeature('coords').x;
+	    //     old_edges[i + 1] = nodes[node_a_id].getFeature('coords').y;
+	    //     old_edges[i + 3] = nodes[node_b_id].getFeature('coords').x;
+	    //     old_edges[i + 4] = nodes[node_b_id].getFeature('coords').y;
+
+	    //     // if ( globals.TWO_D_MODE ) {
+	    //     //   old_edges[i + 2] = 0;
+	    //     //   old_edges[i + 5] = 0;
+	    //     // } else {
+	    //     //   old_edges[i + 2] = nodes[node_a_id].getFeature('coords').z;
+	    //     //   old_edges[i + 5] = nodes[node_b_id].getFeature('coords').z;
+	    //     // }
+	    //     i += 6;
+	    //   }
+	      
+	    // });
+
+	  });
+	  // console.log(bodies[0].pos);
+	  
+	  // At this point every body object has valid 2d force vecor
+	  // console.dir(bodies[0].force);
+	  
+
+	  network.children[0].geometry.attributes.position.needsUpdate = true;
+	  network.children[1].geometry.attributes.position.needsUpdate = true;
+	  network.children[2].geometry.attributes.position.needsUpdate = true;
+	  window.requestAnimationFrame(update);
+	}
+
+	function fdStop() {
+	  defaults.stop_fd = true;
+	}
+
+	//export
+	force.fdLoop = fdLoop;
+	force.fdStop = fdStop;
+
+
+
+	// custom body class
+	function NodeBody(x, y, id) {
+	  this.id = id;
+	  this.mass = 1;
+	  this.pos = {x: x, y: y};
+	  this.prevPos = {x: x, y: y};
+	  this.force = {x: x, y: y};
+	  this.velocity = {x: 0, y: 0}
+	}
+
+/***/ }),
 /* 13 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
+
+	/**
+	 * This is Barnes Hut simulation algorithm for 2d case. Implementation
+	 * is highly optimized (avoids recusion and gc pressure)
+	 *
+	 * http://www.cs.princeton.edu/courses/archive/fall03/cs126/assignments/barnes-hut.html
+	 */
+
+	module.exports = function(options) {
+	  options = options || {};
+	  options.gravity = typeof options.gravity === 'number' ? options.gravity : -1;
+	  options.theta = typeof options.theta === 'number' ? options.theta : 0.8;
+
+	  // we require deterministic randomness here
+	  var random = __webpack_require__(14).random(1984),
+	    Node = __webpack_require__(15),
+	    InsertStack = __webpack_require__(16),
+	    isSamePosition = __webpack_require__(17);
+
+	  var gravity = options.gravity,
+	    updateQueue = [],
+	    insertStack = new InsertStack(),
+	    theta = options.theta,
+
+	    nodesCache = [],
+	    currentInCache = 0,
+	    root = newNode();
+
+	  return {
+	    insertBodies: insertBodies,
+	    /**
+	     * Gets root node if its present
+	     */
+	    getRoot: function() {
+	      return root;
+	    },
+	    updateBodyForce: update,
+	    options: function(newOptions) {
+	      if (newOptions) {
+	        if (typeof newOptions.gravity === 'number') {
+	          gravity = newOptions.gravity;
+	        }
+	        if (typeof newOptions.theta === 'number') {
+	          theta = newOptions.theta;
+	        }
+
+	        return this;
+	      }
+
+	      return {
+	        gravity: gravity,
+	        theta: theta
+	      };
+	    }
+	  };
+
+	  function newNode() {
+	    // To avoid pressure on GC we reuse nodes.
+	    var node = nodesCache[currentInCache];
+	    if (node) {
+	      node.quad0 = null;
+	      node.quad1 = null;
+	      node.quad2 = null;
+	      node.quad3 = null;
+	      node.body = null;
+	      node.mass = node.massX = node.massY = 0;
+	      node.left = node.right = node.top = node.bottom = 0;
+	    } else {
+	      node = new Node();
+	      nodesCache[currentInCache] = node;
+	    }
+
+	    ++currentInCache;
+	    return node;
+	  }
+
+	  function update(sourceBody) {
+	    var queue = updateQueue,
+	      v,
+	      dx,
+	      dy,
+	      r, fx = 0,
+	      fy = 0,
+	      queueLength = 1,
+	      shiftIdx = 0,
+	      pushIdx = 1;
+
+	    queue[0] = root;
+
+	    while (queueLength) {
+	      var node = queue[shiftIdx],
+	        body = node.body;
+
+	      queueLength -= 1;
+	      shiftIdx += 1;
+	      var differentBody = (body !== sourceBody);
+	      if (body && differentBody) {
+	        // If the current node is a leaf node (and it is not source body),
+	        // calculate the force exerted by the current node on body, and add this
+	        // amount to body's net force.
+	        dx = body.pos.x - sourceBody.pos.x;
+	        dy = body.pos.y - sourceBody.pos.y;
+	        r = Math.sqrt(dx * dx + dy * dy);
+
+	        if (r === 0) {
+	          // Poor man's protection against zero distance.
+	          dx = (random.nextDouble() - 0.5) / 50;
+	          dy = (random.nextDouble() - 0.5) / 50;
+	          r = Math.sqrt(dx * dx + dy * dy);
+	        }
+
+	        // This is standard gravition force calculation but we divide
+	        // by r^3 to save two operations when normalizing force vector.
+	        v = gravity * body.mass * sourceBody.mass / (r * r * r);
+	        fx += v * dx;
+	        fy += v * dy;
+	      } else if (differentBody) {
+	        // Otherwise, calculate the ratio s / r,  where s is the width of the region
+	        // represented by the internal node, and r is the distance between the body
+	        // and the node's center-of-mass
+	        dx = node.massX / node.mass - sourceBody.pos.x;
+	        dy = node.massY / node.mass - sourceBody.pos.y;
+	        r = Math.sqrt(dx * dx + dy * dy);
+
+	        if (r === 0) {
+	          // Sorry about code duplucation. I don't want to create many functions
+	          // right away. Just want to see performance first.
+	          dx = (random.nextDouble() - 0.5) / 50;
+	          dy = (random.nextDouble() - 0.5) / 50;
+	          r = Math.sqrt(dx * dx + dy * dy);
+	        }
+	        // If s / r < θ, treat this internal node as a single body, and calculate the
+	        // force it exerts on sourceBody, and add this amount to sourceBody's net force.
+	        if ((node.right - node.left) / r < theta) {
+	          // in the if statement above we consider node's width only
+	          // because the region was squarified during tree creation.
+	          // Thus there is no difference between using width or height.
+	          v = gravity * node.mass * sourceBody.mass / (r * r * r);
+	          fx += v * dx;
+	          fy += v * dy;
+	        } else {
+	          // Otherwise, run the procedure recursively on each of the current node's children.
+
+	          // I intentionally unfolded this loop, to save several CPU cycles.
+	          if (node.quad0) {
+	            queue[pushIdx] = node.quad0;
+	            queueLength += 1;
+	            pushIdx += 1;
+	          }
+	          if (node.quad1) {
+	            queue[pushIdx] = node.quad1;
+	            queueLength += 1;
+	            pushIdx += 1;
+	          }
+	          if (node.quad2) {
+	            queue[pushIdx] = node.quad2;
+	            queueLength += 1;
+	            pushIdx += 1;
+	          }
+	          if (node.quad3) {
+	            queue[pushIdx] = node.quad3;
+	            queueLength += 1;
+	            pushIdx += 1;
+	          }
+	        }
+	      }
+	    }
+
+	    sourceBody.force.x += fx;
+	    sourceBody.force.y += fy;
+	  }
+
+	  function insertBodies(bodies) {
+	    var x1 = Number.MAX_VALUE,
+	      y1 = Number.MAX_VALUE,
+	      x2 = Number.MIN_VALUE,
+	      y2 = Number.MIN_VALUE,
+	      i,
+	      max = bodies.length;
+
+	    // To reduce quad tree depth we are looking for exact bounding box of all particles.
+	    i = max;
+	    while (i--) {
+	      var x = bodies[i].pos.x;
+	      var y = bodies[i].pos.y;
+	      if (x < x1) {
+	        x1 = x;
+	      }
+	      if (x > x2) {
+	        x2 = x;
+	      }
+	      if (y < y1) {
+	        y1 = y;
+	      }
+	      if (y > y2) {
+	        y2 = y;
+	      }
+	    }
+
+	    // Squarify the bounds.
+	    var dx = x2 - x1,
+	      dy = y2 - y1;
+	    if (dx > dy) {
+	      y2 = y1 + dx;
+	    } else {
+	      x2 = x1 + dy;
+	    }
+
+	    currentInCache = 0;
+	    root = newNode();
+	    root.left = x1;
+	    root.right = x2;
+	    root.top = y1;
+	    root.bottom = y2;
+
+	    i = max - 1;
+	    if (i >= 0) {
+	      root.body = bodies[i];
+	    }
+	    while (i--) {
+	      insert(bodies[i], root);
+	    }
+	  }
+
+	  function insert(newBody) {
+	    insertStack.reset();
+	    insertStack.push(root, newBody);
+
+	    while (!insertStack.isEmpty()) {
+	      var stackItem = insertStack.pop(),
+	        node = stackItem.node,
+	        body = stackItem.body;
+
+	      if (!node.body) {
+	        // This is internal node. Update the total mass of the node and center-of-mass.
+	        var x = body.pos.x;
+	        var y = body.pos.y;
+	        node.mass = node.mass + body.mass;
+	        node.massX = node.massX + body.mass * x;
+	        node.massY = node.massY + body.mass * y;
+
+	        // Recursively insert the body in the appropriate quadrant.
+	        // But first find the appropriate quadrant.
+	        var quadIdx = 0, // Assume we are in the 0's quad.
+	          left = node.left,
+	          right = (node.right + left) / 2,
+	          top = node.top,
+	          bottom = (node.bottom + top) / 2;
+
+	        if (x > right) { // somewhere in the eastern part.
+	          quadIdx = quadIdx + 1;
+	          left = right;
+	          right = node.right;
+	        }
+	        if (y > bottom) { // and in south.
+	          quadIdx = quadIdx + 2;
+	          top = bottom;
+	          bottom = node.bottom;
+	        }
+
+	        var child = getChild(node, quadIdx);
+	        if (!child) {
+	          // The node is internal but this quadrant is not taken. Add
+	          // subnode to it.
+	          child = newNode();
+	          child.left = left;
+	          child.top = top;
+	          child.right = right;
+	          child.bottom = bottom;
+	          child.body = body;
+
+	          setChild(node, quadIdx, child);
+	        } else {
+	          // continue searching in this quadrant.
+	          insertStack.push(child, body);
+	        }
+	      } else {
+	        // We are trying to add to the leaf node.
+	        // We have to convert current leaf into internal node
+	        // and continue adding two nodes.
+	        var oldBody = node.body;
+	        node.body = null; // internal nodes do not cary bodies
+
+	        if (isSamePosition(oldBody.pos, body.pos)) {
+	          // Prevent infinite subdivision by bumping one node
+	          // anywhere in this quadrant
+	          var retriesCount = 3;
+	          do {
+	            var offset = random.nextDouble();
+	            var dx = (node.right - node.left) * offset;
+	            var dy = (node.bottom - node.top) * offset;
+
+	            oldBody.pos.x = node.left + dx;
+	            oldBody.pos.y = node.top + dy;
+	            retriesCount -= 1;
+	            // Make sure we don't bump it out of the box. If we do, next iteration should fix it
+	          } while (retriesCount > 0 && isSamePosition(oldBody.pos, body.pos));
+
+	          if (retriesCount === 0 && isSamePosition(oldBody.pos, body.pos)) {
+	            // This is very bad, we ran out of precision.
+	            // if we do not return from the method we'll get into
+	            // infinite loop here. So we sacrifice correctness of layout, and keep the app running
+	            // Next layout iteration should get larger bounding box in the first step and fix this
+	            return;
+	          }
+	        }
+	        // Next iteration should subdivide node further.
+	        insertStack.push(node, oldBody);
+	        insertStack.push(node, body);
+	      }
+	    }
+	  }
+	};
+
+	function getChild(node, idx) {
+	  if (idx === 0) return node.quad0;
+	  if (idx === 1) return node.quad1;
+	  if (idx === 2) return node.quad2;
+	  if (idx === 3) return node.quad3;
+	  return null;
+	}
+
+	function setChild(node, idx, child) {
+	  if (idx === 0) node.quad0 = child;
+	  else if (idx === 1) node.quad1 = child;
+	  else if (idx === 2) node.quad2 = child;
+	  else if (idx === 3) node.quad3 = child;
+	}
+
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports) {
+
+	module.exports = {
+	  random: random,
+	  randomIterator: randomIterator
+	};
+
+	/**
+	 * Creates seeded PRNG with two methods:
+	 *   next() and nextDouble()
+	 */
+	function random(inputSeed) {
+	  var seed = typeof inputSeed === 'number' ? inputSeed : (+ new Date());
+	  var randomFunc = function() {
+	      // Robert Jenkins' 32 bit integer hash function.
+	      seed = ((seed + 0x7ed55d16) + (seed << 12))  & 0xffffffff;
+	      seed = ((seed ^ 0xc761c23c) ^ (seed >>> 19)) & 0xffffffff;
+	      seed = ((seed + 0x165667b1) + (seed << 5))   & 0xffffffff;
+	      seed = ((seed + 0xd3a2646c) ^ (seed << 9))   & 0xffffffff;
+	      seed = ((seed + 0xfd7046c5) + (seed << 3))   & 0xffffffff;
+	      seed = ((seed ^ 0xb55a4f09) ^ (seed >>> 16)) & 0xffffffff;
+	      return (seed & 0xfffffff) / 0x10000000;
+	  };
+
+	  return {
+	      /**
+	       * Generates random integer number in the range from 0 (inclusive) to maxValue (exclusive)
+	       *
+	       * @param maxValue Number REQUIRED. Ommitting this number will result in NaN values from PRNG.
+	       */
+	      next : function (maxValue) {
+	          return Math.floor(randomFunc() * maxValue);
+	      },
+
+	      /**
+	       * Generates random double number in the range from 0 (inclusive) to 1 (exclusive)
+	       * This function is the same as Math.random() (except that it could be seeded)
+	       */
+	      nextDouble : function () {
+	          return randomFunc();
+	      }
+	  };
+	}
+
+	/*
+	 * Creates iterator over array, which returns items of array in random order
+	 * Time complexity is guaranteed to be O(n);
+	 */
+	function randomIterator(array, customRandom) {
+	    var localRandom = customRandom || random();
+	    if (typeof localRandom.next !== 'function') {
+	      throw new Error('customRandom does not match expected API: next() function is missing');
+	    }
+
+	    return {
+	        forEach : function (callback) {
+	            var i, j, t;
+	            for (i = array.length - 1; i > 0; --i) {
+	                j = localRandom.next(i + 1); // i inclusive
+	                t = array[j];
+	                array[j] = array[i];
+	                array[i] = t;
+
+	                callback(t);
+	            }
+
+	            if (array.length) {
+	                callback(array[0]);
+	            }
+	        },
+
+	        /**
+	         * Shuffles array randomly, in place.
+	         */
+	        shuffle : function () {
+	            var i, j, t;
+	            for (i = array.length - 1; i > 0; --i) {
+	                j = localRandom.next(i + 1); // i inclusive
+	                t = array[j];
+	                array[j] = array[i];
+	                array[i] = t;
+	            }
+
+	            return array;
+	        }
+	    };
+	}
+
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports) {
+
+	/**
+	 * Internal data structure to represent 2D QuadTree node
+	 */
+	module.exports = function Node() {
+	  // body stored inside this node. In quad tree only leaf nodes (by construction)
+	  // contain boides:
+	  this.body = null;
+
+	  // Child nodes are stored in quads. Each quad is presented by number:
+	  // 0 | 1
+	  // -----
+	  // 2 | 3
+	  this.quad0 = null;
+	  this.quad1 = null;
+	  this.quad2 = null;
+	  this.quad3 = null;
+
+	  // Total mass of current node
+	  this.mass = 0;
+
+	  // Center of mass coordinates
+	  this.massX = 0;
+	  this.massY = 0;
+
+	  // bounding box coordinates
+	  this.left = 0;
+	  this.top = 0;
+	  this.bottom = 0;
+	  this.right = 0;
+	};
+
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports) {
+
+	module.exports = InsertStack;
+
+	/**
+	 * Our implmentation of QuadTree is non-recursive to avoid GC hit
+	 * This data structure represent stack of elements
+	 * which we are trying to insert into quad tree.
+	 */
+	function InsertStack () {
+	    this.stack = [];
+	    this.popIdx = 0;
+	}
+
+	InsertStack.prototype = {
+	    isEmpty: function() {
+	        return this.popIdx === 0;
+	    },
+	    push: function (node, body) {
+	        var item = this.stack[this.popIdx];
+	        if (!item) {
+	            // we are trying to avoid memory pressue: create new element
+	            // only when absolutely necessary
+	            this.stack[this.popIdx] = new InsertStackElement(node, body);
+	        } else {
+	            item.node = node;
+	            item.body = body;
+	        }
+	        ++this.popIdx;
+	    },
+	    pop: function () {
+	        if (this.popIdx > 0) {
+	            return this.stack[--this.popIdx];
+	        }
+	    },
+	    reset: function () {
+	        this.popIdx = 0;
+	    }
+	};
+
+	function InsertStackElement(node, body) {
+	    this.node = node; // QuadTree node
+	    this.body = body; // physical body which needs to be inserted to node
+	}
+
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports) {
+
+	module.exports = function isSamePosition(point1, point2) {
+	    var dx = Math.abs(point1.x - point2.x);
+	    var dy = Math.abs(point1.y - point2.y);
+
+	    return (dx < 1e-8 && dy < 1e-8);
+	};
+
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
 
 	var network = __webpack_require__(1).globals.network;
 	var update = __webpack_require__(2).update;
@@ -1553,9 +2250,9 @@
 	};
 
 
-/***/ },
-/* 14 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ }),
+/* 19 */
+/***/ (function(module, exports, __webpack_require__) {
 
 	var keys = __webpack_require__(1).keys;
 	var globals = __webpack_require__(1).globals;
@@ -1564,7 +2261,7 @@
 	var network = __webpack_require__(1).globals.network;
 	var container = __webpack_require__(1).container;
 	var mouse = __webpack_require__(1).globals.mouse;
-	var nodeIntersection = __webpack_require__(13).nodeIntersection;
+	var nodeIntersection = __webpack_require__(18).nodeIntersection;
 	var callbacks = __webpack_require__(1).callbacks;
 
 	// for testing purposes
@@ -1749,5 +2446,5 @@
 	};
 
 
-/***/ }
+/***/ })
 /******/ ]);
