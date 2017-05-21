@@ -1244,15 +1244,18 @@
 	    init_coords = true,
 	    old_coordinates = null,
 	    random_components = null,
-	    first_init = true;
+	    first_init = true,
+	    converged = false;
 
 	var nodes;
 	var bodies = [];
 	var body;
 	var coords;
+	var adj_list;
 
 	const SLOW_DOWN_FACTOR = 1e3;
-
+	const SPRING_CONST = 0.2;
+	const EPSILON = 0.1;
 
 	/**
 	 * 
@@ -1263,7 +1266,10 @@
 	  }
 	  if(!defaults.stop_fd) {    
 	    forceDirectedLayout();
-	    window.requestAnimationFrame(fdLoop);
+
+	    if(!converged) {
+	      window.requestAnimationFrame(fdLoop);
+	    }
 	  }
 
 	  // TODO check this out...
@@ -1274,29 +1280,25 @@
 
 
 	/**
-	 * 
+	 * @assumption window.graph is defined and an instance of Graphinius BaseGraph
 	 */
 	function init() {
 	  now = +new Date;
+
+	  // Let's get an adjacency list including incoming edges for spring calculation
+	  adj_list = graph.adjList(true);
+	  // console.log(adj_list);
+
 	  // reset bodies
 	  bodies = [];
 	  nodes = graph.getNodes();
 	  old_coordinates = new Float32Array(graph.nrNodes() * 3);
-	  var nodes = graph.getNodes(),
-	      i = 0;
+	  var nodes = graph.getNodes();
 	      
 	  // BAD HACK!!!
 	  var diff_x = first_init ? dims.AVG_X : 0;
 	  var diff_y = first_init ? dims.AVG_Y : 0;
 	  var diff_z = first_init ? dims.AVG_Z : 0;
-	  
-	  // Correct coordinates for viewport
-	  for(node in nodes_obj) {
-	    old_coordinates[i] = nodes[node].getFeature('coords').x - diff_x;
-	    old_coordinates[i + 1] = nodes[node].getFeature('coords').y - diff_y;
-	    old_coordinates[i + 2] = nodes[node].getFeature('coords').z - diff_z;
-	    i += 3;
-	  }
 
 	  // Create new bodies from graph nodes;
 	  for (var nodeID in nodes) {
@@ -1316,8 +1318,8 @@
 	function forceDirectedLayout() {
 
 	  nodes = graph.getNodes();
-	  old_nodes = network.children[0].geometry.getAttribute('position').array;
-	  // console.log(old_nodes);
+	  gl_nodes = network.children[0].geometry.getAttribute('position').array;
+	  // console.log(gl_nodes);
 
 	  // build quad tree:
 	  var createQuadTree = __webpack_require__(13);
@@ -1333,8 +1335,16 @@
 
 	  // Update body position as well as node position
 	  bodies.forEach(function(body) {
-	    body.velocity.x += body.force.x / SLOW_DOWN_FACTOR;
-	    body.velocity.y += body.force.y / SLOW_DOWN_FACTOR;
+	    // calculate spring forces
+	    var spring_force = calculateSpringForces(body.id) || {x: 0, y: 0};
+
+	    body.velocity.x = ( body.force.x / SLOW_DOWN_FACTOR + spring_force.x );
+	    body.velocity.y = ( body.force.y / SLOW_DOWN_FACTOR + spring_force.y );
+
+	    if ( Math.abs(body.pos.x) < EPSILON || Math.abs(body.pos.y) < EPSILON ) {
+	      // converged = true;
+	    }
+
 	    body.pos.x += body.velocity.x;
 	    body.pos.y += body.velocity.y;
 
@@ -1344,9 +1354,12 @@
 
 	    // Set new node position for WebGL
 	    var index = nodes_obj_idx[body.id];
-	    old_nodes[index] = nodes[body.id].getFeature('coords').x;
-	    old_nodes[index + 1] = nodes[body.id].getFeature('coords').y;
+	    gl_nodes[index] = nodes[body.id].getFeature('coords').x;
+	    gl_nodes[index + 1] = nodes[body.id].getFeature('coords').y;
 	  });
+
+	  console.log(bodies[0].velocity.x);
+	  console.log(bodies[0].velocity.y);
 
 	  // console.log(bodies[0].velocity);
 
@@ -1358,24 +1371,24 @@
 	                
 	  [undEdges, dirEdges].forEach(function(all_edges_of_a_node) {
 	    var i = 0;
-	    var old_edges = all_edges_of_a_node[0];
+	    var gl_edges = all_edges_of_a_node[0];
 	    var edges = all_edges_of_a_node[1];
 	    for (var edge_index in edges) {
 	      var edge = edges[edge_index];
 	      var node_a_id = edge._node_a.getID();
 	      var node_b_id = edge._node_b.getID();
 
-	      old_edges[i] = nodes[node_a_id].getFeature('coords').x;
-	      old_edges[i + 1] = nodes[node_a_id].getFeature('coords').y;
-	      old_edges[i + 3] = nodes[node_b_id].getFeature('coords').x;
-	      old_edges[i + 4] = nodes[node_b_id].getFeature('coords').y;
+	      gl_edges[i] = nodes[node_a_id].getFeature('coords').x;
+	      gl_edges[i + 1] = nodes[node_a_id].getFeature('coords').y;
+	      gl_edges[i + 3] = nodes[node_b_id].getFeature('coords').x;
+	      gl_edges[i + 4] = nodes[node_b_id].getFeature('coords').y;
 
 	      // if ( globals.TWO_D_MODE ) {
-	      //   old_edges[i + 2] = 0;
-	      //   old_edges[i + 5] = 0;
+	      //   gl_edges[i + 2] = 0;
+	      //   gl_edges[i + 5] = 0;
 	      // } else {
-	      //   old_edges[i + 2] = nodes[node_a_id].getFeature('coords').z;
-	      //   old_edges[i + 5] = nodes[node_b_id].getFeature('coords').z;
+	      //   gl_edges[i + 2] = nodes[node_a_id].getFeature('coords').z;
+	      //   gl_edges[i + 5] = nodes[node_b_id].getFeature('coords').z;
 	      // }
 	      i += 6;
 	    }
@@ -1393,10 +1406,26 @@
 	  defaults.stop_fd = true;
 	}
 
-	//export
-	force.fdLoop = fdLoop;
-	force.fdStop = fdStop;
 
+	function calculateSpringForces(nodeID) {
+	  var force = {x: 0, y: 0},
+	      own_coords = nodes[nodeID].getFeature('coords'),
+	      n_coords = {x: 0, y: 0},
+	      x_diff = 0,
+	      y_diff = 0;
+	  
+	  for ( n_id in adj_list[nodeID] ) {
+	    // get coordinates of neighbor
+	    n_coords = nodes[n_id].getFeature('coords');
+	    x_diff = n_coords.x - own_coords.x;
+	    y_diff = n_coords.y - own_coords.y;
+	    force.x += x_diff * SPRING_CONST;
+	    force.y += y_diff * SPRING_CONST;
+	  }
+	  // console.log(force);
+	  return force;
+	  // return {x: 0, y: 0};
+	}
 
 
 	// custom body class
@@ -1408,6 +1437,12 @@
 	  this.force = {x: x, y: y};
 	  this.velocity = {x: 0, y: 0}
 	}
+
+
+
+	//export
+	force.fdLoop = fdLoop;
+	force.fdStop = fdStop;
 
 /***/ },
 /* 13 */
