@@ -53,7 +53,7 @@ function init() {
   now = +new Date;
 
   // Let's get an adjacency list including incoming edges for spring calculation
-  adj_list = graph.adjList(true);
+  adj_list = graph.adjListDict(true);
   // console.log(adj_list);
 
   // reset bodies
