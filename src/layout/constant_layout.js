@@ -6,6 +6,7 @@ var globals = require("../core/init.js").globals;
 //tmp object to find indices
 var nodes_obj_idx = {},
     edges_obj_idx = {};
+
 globals.camera = new THREE.PerspectiveCamera( 
                       defaults.fov,
                       container.WIDTH / container.HEIGHT,
@@ -81,7 +82,8 @@ function renderGraph(graph) {
 
   var material = new THREE.PointsMaterial({
     vertexColors: THREE.VertexColors,
-    size: defaults.node_size
+    size: defaults.node_size,
+
   });
 
   var particles = new THREE.Points(geometry, material);
@@ -89,7 +91,6 @@ function renderGraph(graph) {
 
   //EDGE
   var materialLine = new THREE.LineBasicMaterial({
-    transparent : defaults.tranparent,
     opacity: defaults.opacity,
     vertexColors: THREE.VertexColors,
     linewidth: defaults.linewidth

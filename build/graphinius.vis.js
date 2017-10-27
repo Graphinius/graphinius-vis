@@ -125,24 +125,24 @@
 	  },
 	  // default render parameters
 	  defaults: {
-	    node_size: 4,
+	    node_size: 3,
 	    background_color: 0x000000,
 	    transparent: true,
-	    opacity: 0.2, //default is 1; range: 0.0 - 1.0
-	    linewidth: 1,
+	    opacity: 0.2, // INACTIVE -- default is 1; range: 0.0 - 1.0
+	    linewidth: 1, // INACTIVE
 	    
 	    //camera settings
-	    fov: 50,
-	    near: 0.1,
-	    far: 1e6,
+	    fov: 90,
+	    near: 1,
+	    far: 1e4,
 	    
 	    //raycaster
 	    highlight_node_color: new THREE.Color(0xf1ecfb),
 
 	    //zoom
-	    ZOOM_FACTOR: 0.05,
-	    MAX_FOV: 1e5, //zoom out
-	    MIN_FOV: 1, //zoom in
+	    CAM_Z_DELTA_FACTOR: 0.5,
+	    MAX_CAM_DISTANCE: 3e3,
+	    MIN_CAM_DISTANCE: 1e2,
 
 	    //distance to move
 	    delta_distance: 10,
@@ -274,6 +274,7 @@
 	//tmp object to find indices
 	var nodes_obj_idx = {},
 	    edges_obj_idx = {};
+
 	globals.camera = new THREE.PerspectiveCamera( 
 	                      defaults.fov,
 	                      container.WIDTH / container.HEIGHT,
@@ -349,7 +350,8 @@
 
 	  var material = new THREE.PointsMaterial({
 	    vertexColors: THREE.VertexColors,
-	    size: defaults.node_size
+	    size: defaults.node_size,
+
 	  });
 
 	  var particles = new THREE.Points(geometry, material);
@@ -357,7 +359,6 @@
 
 	  //EDGE
 	  var materialLine = new THREE.LineBasicMaterial({
-	    transparent : defaults.tranparent,
 	    opacity: defaults.opacity,
 	    vertexColors: THREE.VertexColors,
 	    linewidth: defaults.linewidth
@@ -2383,9 +2384,11 @@
 	    }
 	  }
 	  else {
-	    globals.camera.fov -= defaults.ZOOM_FACTOR * delta;
-	    globals.camera.fov = Math.max( Math.min( globals.camera.fov, defaults.MAX_FOV ), defaults.MIN_FOV );
-	    globals.camera.projectionMatrix = new THREE.Matrix4().makePerspective(globals.camera.fov, container.WIDTH / container.HEIGHT, globals.camera.near, globals.camera.far);
+	    var new_z_pos = globals.camera.position.z + defaults.CAM_Z_DELTA_FACTOR * delta;
+	    new_z_pos = Math.min(new_z_pos, defaults.MAX_CAM_DISTANCE);
+	    new_z_pos = Math.max(new_z_pos, defaults.MIN_CAM_DISTANCE);
+	    globals.camera.position.z = new_z_pos;
+	    // console.log(new_z_pos);
 	  }
 	  window.requestAnimationFrame(update);
 	}

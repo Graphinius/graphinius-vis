@@ -24,24 +24,24 @@ var config = {
   },
   // default render parameters
   defaults: {
-    node_size: 4,
+    node_size: 3,
     background_color: 0x000000,
     transparent: true,
-    opacity: 0.2, //default is 1; range: 0.0 - 1.0
-    linewidth: 1,
+    opacity: 0.2, // INACTIVE -- default is 1; range: 0.0 - 1.0
+    linewidth: 1, // INACTIVE
     
     //camera settings
-    fov: 50,
-    near: 0.1,
-    far: 1e6,
+    fov: 90,
+    near: 1,
+    far: 1e4,
     
     //raycaster
     highlight_node_color: new THREE.Color(0xf1ecfb),
 
     //zoom
-    ZOOM_FACTOR: 0.05,
-    MAX_FOV: 1e5, //zoom out
-    MIN_FOV: 1, //zoom in
+    CAM_Z_DELTA_FACTOR: 0.5,
+    MAX_CAM_DISTANCE: 3e3,
+    MIN_CAM_DISTANCE: 1e2,
 
     //distance to move
     delta_distance: 10,

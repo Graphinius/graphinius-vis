@@ -94,9 +94,11 @@ function mousewheel(event) {
     }
   }
   else {
-    globals.camera.fov -= defaults.ZOOM_FACTOR * delta;
-    globals.camera.fov = Math.max( Math.min( globals.camera.fov, defaults.MAX_FOV ), defaults.MIN_FOV );
-    globals.camera.projectionMatrix = new THREE.Matrix4().makePerspective(globals.camera.fov, container.WIDTH / container.HEIGHT, globals.camera.near, globals.camera.far);
+    var new_z_pos = globals.camera.position.z + defaults.CAM_Z_DELTA_FACTOR * delta;
+    new_z_pos = Math.min(new_z_pos, defaults.MAX_CAM_DISTANCE);
+    new_z_pos = Math.max(new_z_pos, defaults.MIN_CAM_DISTANCE);
+    globals.camera.position.z = new_z_pos;
+    // console.log(new_z_pos);
   }
   window.requestAnimationFrame(update);
 }
