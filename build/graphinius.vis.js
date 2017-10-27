@@ -42,7 +42,7 @@
 /************************************************************************/
 /******/ ([
 /* 0 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(global) {var init            = __webpack_require__(1),
 	    render          = __webpack_require__(2),
@@ -95,9 +95,9 @@
 
 	/* WEBPACK VAR INJECTION */}.call(exports, (function() { return this; }())))
 
-/***/ },
+/***/ }),
 /* 1 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	// window.$G = require('graphinius').$G;
 
@@ -219,9 +219,9 @@
 
 
 
-/***/ },
+/***/ }),
 /* 2 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var container = __webpack_require__(1).container;
 	var globals = __webpack_require__(1).globals;
@@ -262,9 +262,9 @@
 	};
 
 
-/***/ },
+/***/ }),
 /* 3 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var container = __webpack_require__(1).container;
 	var defaults = __webpack_require__(1).defaults;
@@ -421,9 +421,9 @@
 	};
 
 
-/***/ },
+/***/ }),
 /* 4 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var force = __webpack_require__(1).force_layout;
 	var switchToFullScreen = __webpack_require__(5).switchToFullScreen;
@@ -521,9 +521,9 @@
 	    globals.renderer.setSize( window.innerWidth, window.innerHeight );
 	}
 
-/***/ },
+/***/ }),
 /* 5 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	var FSelem = {
 	      el: null,
@@ -596,9 +596,9 @@
 	  switchToFullScreen: switchToFullScreen
 	}
 
-/***/ },
+/***/ }),
 /* 6 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var network = __webpack_require__(1).globals.network;
 	var update = __webpack_require__(2).update;
@@ -993,15 +993,15 @@
 	};
 
 
-/***/ },
+/***/ }),
 /* 7 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	
 
-/***/ },
+/***/ }),
 /* 8 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	
 	/**
@@ -1021,15 +1021,15 @@
 	window.requestAnimationFrame(main_loop);
 
 
-/***/ },
+/***/ }),
 /* 9 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	
 
-/***/ },
+/***/ }),
 /* 10 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	function readJSON(event, explicit, direction, weighted_mode) {
 	  var startTime = +(new Date);
@@ -1098,9 +1098,9 @@
 	};
 
 
-/***/ },
+/***/ }),
 /* 11 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var INIT = __webpack_require__(1);
 	var defaults = INIT.defaults;
@@ -1228,9 +1228,9 @@
 	force.fdStop = fdStop;
 
 
-/***/ },
+/***/ }),
 /* 12 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var INIT = __webpack_require__(1);
 	var defaults = INIT.defaults;
@@ -1287,7 +1287,7 @@
 	  now = +new Date;
 
 	  // Let's get an adjacency list including incoming edges for spring calculation
-	  adj_list = graph.adjList(true);
+	  adj_list = graph.adjListDict(true);
 	  // console.log(adj_list);
 
 	  // reset bodies
@@ -1445,9 +1445,9 @@
 	force.fdLoop = fdLoop;
 	force.fdStop = fdStop;
 
-/***/ },
+/***/ }),
 /* 13 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	/**
 	 * This is Barnes Hut simulation algorithm for 2d case. Implementation
@@ -1778,9 +1778,9 @@
 	}
 
 
-/***/ },
+/***/ }),
 /* 14 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	module.exports = {
 	  random: random,
@@ -1869,9 +1869,9 @@
 	}
 
 
-/***/ },
+/***/ }),
 /* 15 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	/**
 	 * Internal data structure to represent 2D QuadTree node
@@ -1905,9 +1905,9 @@
 	};
 
 
-/***/ },
+/***/ }),
 /* 16 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	module.exports = InsertStack;
 
@@ -1953,9 +1953,9 @@
 	}
 
 
-/***/ },
+/***/ }),
 /* 17 */
-/***/ function(module, exports) {
+/***/ (function(module, exports) {
 
 	module.exports = function isSamePosition(point1, point2) {
 	    var dx = Math.abs(point1.x - point2.x);
@@ -1965,9 +1965,9 @@
 	};
 
 
-/***/ },
+/***/ }),
 /* 18 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var network = __webpack_require__(1).globals.network;
 	var update = __webpack_require__(2).update;
@@ -2284,9 +2284,9 @@
 	};
 
 
-/***/ },
+/***/ }),
 /* 19 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ (function(module, exports, __webpack_require__) {
 
 	var keys = __webpack_require__(1).keys;
 	var globals = __webpack_require__(1).globals;
@@ -2482,5 +2482,5 @@
 	};
 
 
-/***/ }
+/***/ })
 /******/ ]);
