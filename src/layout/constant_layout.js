@@ -80,10 +80,13 @@ function renderGraph(graph) {
   geometry.addAttribute('color', new THREE.BufferAttribute(nodeColors, 3));
   geometry.addAttribute('size', new THREE.BufferAttribute(nodeSizes, 1));
 
+
   var material = new THREE.PointsMaterial({
     vertexColors: THREE.VertexColors,
     size: defaults.node_size,
-
+    map: defaults.texture,
+    transparent: defaults.transparent,
+    opacity: defaults.node_opacity
   });
 
   var particles = new THREE.Points(geometry, material);
@@ -91,9 +94,9 @@ function renderGraph(graph) {
 
   //EDGE
   var materialLine = new THREE.LineBasicMaterial({
-    opacity: defaults.opacity,
     vertexColors: THREE.VertexColors,
-    linewidth: defaults.linewidth
+    linewidth: defaults.edge_width,
+    opacity: defaults.edge_opacity
   });
 
   [und_edges, dir_edges].forEach(function(edges) {

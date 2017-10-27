@@ -93,9 +93,11 @@ function updateRandomPostions() {
     var index = nodes_obj_idx[node];
     node_obj[node].getFeature('coords').x = old_coordinates[index] + Math.random() * 20 - 10 - dims.AVG_X;
     node_obj[node].getFeature('coords').y = old_coordinates[index + 1] + Math.random() * 20 - 10 - dims.AVG_Y;
-    node_obj[node].getFeature('coords').z = old_coordinates[index + 2] + Math.random() * 20 - 10 - dims.AVG_Z;
     if(globals.TWO_D_MODE) {
       node_obj[node].getFeature('coords').z = 0;
+    }
+    else {
+      node_obj[node].getFeature('coords').z = old_coordinates[index + 2] + Math.random() * 20 - 10 - dims.AVG_Z;
     }
 
     old_nodes[index] = node_obj[node].getFeature('coords').x;

@@ -1,5 +1,13 @@
 // window.$G = require('graphinius').$G;
 
+// THREE.ImageUtils.crossOrigin = '';
+var loader = new THREE.TextureLoader();
+loader.crossOrigin = true;
+
+var disc = "/img/disc.png";
+var flake = "/img/snowflake.png";
+var bernd = "/img/bernd.jpg";
+
 var config = {
   // keys for handling events
   keys: {
@@ -24,11 +32,18 @@ var config = {
   },
   // default render parameters
   defaults: {
-    node_size: 3,
     background_color: 0x000000,
+
+    // Nodes
+    node_size: 3,
+    node_opacity: 1,
     transparent: true,
-    opacity: 0.2, // INACTIVE -- default is 1; range: 0.0 - 1.0
-    linewidth: 1, // INACTIVE
+    
+    // Edges
+    edge_width: 1,
+    edge_opacity: 0.2,
+    texture: loader.load(disc),
+    
     
     //camera settings
     fov: 90,

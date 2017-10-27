@@ -101,6 +101,14 @@
 
 	// window.$G = require('graphinius').$G;
 
+	// THREE.ImageUtils.crossOrigin = '';
+	var loader = new THREE.TextureLoader();
+	loader.crossOrigin = true;
+
+	var disc = "/img/disc.png";
+	var flake = "/img/snowflake.png";
+	var bernd = "/img/bernd.jpg";
+
 	var config = {
 	  // keys for handling events
 	  keys: {
@@ -125,11 +133,18 @@
 	  },
 	  // default render parameters
 	  defaults: {
-	    node_size: 3,
 	    background_color: 0x000000,
+
+	    // Nodes
+	    node_size: 3,
+	    node_opacity: 1,
 	    transparent: true,
-	    opacity: 0.2, // INACTIVE -- default is 1; range: 0.0 - 1.0
-	    linewidth: 1, // INACTIVE
+	    
+	    // Edges
+	    edge_width: 1,
+	    edge_opacity: 0.2,
+	    texture: loader.load(disc),
+	    
 	    
 	    //camera settings
 	    fov: 90,
@@ -348,10 +363,13 @@
 	  geometry.addAttribute('color', new THREE.BufferAttribute(nodeColors, 3));
 	  geometry.addAttribute('size', new THREE.BufferAttribute(nodeSizes, 1));
 
+
 	  var material = new THREE.PointsMaterial({
 	    vertexColors: THREE.VertexColors,
 	    size: defaults.node_size,
-
+	    map: defaults.texture,
+	    transparent: defaults.transparent,
+	    opacity: defaults.node_opacity
 	  });
 
 	  var particles = new THREE.Points(geometry, material);
@@ -359,9 +377,9 @@
 
 	  //EDGE
 	  var materialLine = new THREE.LineBasicMaterial({
-	    opacity: defaults.opacity,
 	    vertexColors: THREE.VertexColors,
-	    linewidth: defaults.linewidth
+	    linewidth: defaults.edge_width,
+	    opacity: defaults.edge_opacity
 	  });
 
 	  [und_edges, dir_edges].forEach(function(edges) {
@@ -425,6 +443,8 @@
 /* 4 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var defaults = __webpack_require__(1).defaults;
+
 	var force = __webpack_require__(1).force_layout;
 	var switchToFullScreen = __webpack_require__(5).switchToFullScreen;
 
@@ -480,23 +500,21 @@
 	  }
 	}
 
-	document.querySelector("#force_magnitude").addEventListener('input', function(event) {
-	  var mag = +document.querySelector("#force_magnitude").value;
-	  force.magnitude = mag;
-	  document.querySelector("#force_mag_display").innerHTML = mag;
-	});
+	// document.querySelector("#node_size_input").addEventListener('input', function(event) {
+	//   var new_node_size = document.querySelector("#node_size_input").value;
+	//   defaults.node_size = new_node_size;
+	//   document.querySelector("#node_size").innerHTML = new_node_size;
+	// });
 
-	document.querySelector("#force_speed").addEventListener('input', function(event) {
-	  var speed = +document.querySelector("#force_speed").value;
-	  force.speed = speed;
-	  document.querySelector("#force_speed_display").innerHTML = speed;
-	});
 
-	document.querySelector("#force_speed").addEventListener('input', function(event) {
-	  var speed = +document.querySelector("#force_speed").value;
-	  force.speed = speed;
-	  document.querySelector("#force_speed_display").innerHTML = speed;
-	});
+
+	// document.querySelector("#force_speed").addEventListener('input', function(event) {
+	//   var speed = +document.querySelector("#force_speed").value;
+	//   force.speed = speed;
+	//   document.querySelector("#force_speed_display").innerHTML = speed;
+	// });
+
+
 
 	module.exports = {
 	  startStopForce: startStopForce,
@@ -2064,9 +2082,11 @@
 	    var index = nodes_obj_idx[node];
 	    node_obj[node].getFeature('coords').x = old_coordinates[index] + Math.random() * 20 - 10 - dims.AVG_X;
 	    node_obj[node].getFeature('coords').y = old_coordinates[index + 1] + Math.random() * 20 - 10 - dims.AVG_Y;
-	    node_obj[node].getFeature('coords').z = old_coordinates[index + 2] + Math.random() * 20 - 10 - dims.AVG_Z;
 	    if(globals.TWO_D_MODE) {
 	      node_obj[node].getFeature('coords').z = 0;
+	    }
+	    else {
+	      node_obj[node].getFeature('coords').z = old_coordinates[index + 2] + Math.random() * 20 - 10 - dims.AVG_Z;
 	    }
 
 	    old_nodes[index] = node_obj[node].getFeature('coords').x;
@@ -2460,22 +2480,25 @@
 	}
 
 
-	container.element.addEventListener('click', click, false);
-	function click(event) {
-	  if(globals.INTERSECTED.node != null) {
+	/**
+	 * !!! This belongs into interaction.js !!!
+	 */
+	// container.element.addEventListener('click', click, false);
+	// function click(event) {
+	//   if(globals.INTERSECTED.node != null) {
 	    
-	    console.log(globals.INTERSECTED.node);
+	//     // console.log(globals.INTERSECTED.node);
 	    
-	    globals.selected_node = globals.INTERSECTED.node;
-	    document.querySelector("#nodeInfo").style.visibility = 'visible';
-	    var ni = callbacks.node_intersects;
-	    for (var cb in ni) {
-	      if (typeof ni[cb] === 'function') {
-	        ni[cb](globals.INTERSECTED.node);
-	      }
-	    }
-	  }
-	}
+	//     globals.selected_node = globals.INTERSECTED.node;
+	//     document.querySelector("#nodeInfo").style.visibility = 'visible';
+	//     var ni = callbacks.node_intersects;
+	//     for (var cb in ni) {
+	//       if (typeof ni[cb] === 'function') {
+	//         ni[cb](globals.INTERSECTED.node);
+	//       }
+	//     }
+	//   }
+	// }
 
 	module.exports = {
 	  mouse: mouse

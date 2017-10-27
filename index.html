@@ -37,11 +37,15 @@
               <span class="onoffswitch-switch"></span>
           </label>
         </div><br/>
-        Force Magnitude: <span id="force_mag_display">1</span> <br/>
-        <input id="force_magnitude" type="range" min="1" max="5" step=".01" value="2" /> <br/>
-        Force speed: <span id="force_speed_display">2</span> <br/>
-        <input id="force_speed" type="range" min="1" max="5" step=".01" value="2" /> <br/>        
+
         
+        <!-- Node Size: <span id="node_size"> 3 </span> <br/>
+        <input id="node_size_input" type="range" min="1" max="50" step="1" value="3" /> <br/>
+
+        Line Width: <span id="force_speed_display">2</span> <br/>
+        <input id="force_speed" type="range" min="1" max="5" step=".01" value="2" /> <br/>         -->
+        
+
        
         <input id="switch2DButton" value="Switch to 2D" type="button" onclick=$GV.view.interaction.switchTo2D()><br/>
         <input id="switch3DButton" value="Switch to 3D" type="button" onclick=$GV.view.interaction.switchTo3D()><br/><br/>
@@ -78,7 +82,7 @@
       <div id="main_vis">
 					<!--<div id="fullscreenSwitch" onclick=$GV.view.fullscreen.switchToFullScreen('#containerGraph')> Fullscreen </div>          -->
           
-            <div id="nodeInfo">Node ID: <span id="nodeID"></span></div>
+            <!-- <div id="nodeInfo">Node ID: <span id="nodeID"></span></div> -->
                         
             <div id="nav-legend">
               <span class="title">Navigation Control</span> </br>

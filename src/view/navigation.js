@@ -170,22 +170,25 @@ function mouseMove(event) {
 }
 
 
-container.element.addEventListener('click', click, false);
-function click(event) {
-  if(globals.INTERSECTED.node != null) {
+/**
+ * !!! This belongs into interaction.js !!!
+ */
+// container.element.addEventListener('click', click, false);
+// function click(event) {
+//   if(globals.INTERSECTED.node != null) {
     
-    console.log(globals.INTERSECTED.node);
+//     // console.log(globals.INTERSECTED.node);
     
-    globals.selected_node = globals.INTERSECTED.node;
-    document.querySelector("#nodeInfo").style.visibility = 'visible';
-    var ni = callbacks.node_intersects;
-    for (var cb in ni) {
-      if (typeof ni[cb] === 'function') {
-        ni[cb](globals.INTERSECTED.node);
-      }
-    }
-  }
-}
+//     globals.selected_node = globals.INTERSECTED.node;
+//     document.querySelector("#nodeInfo").style.visibility = 'visible';
+//     var ni = callbacks.node_intersects;
+//     for (var cb in ni) {
+//       if (typeof ni[cb] === 'function') {
+//         ni[cb](globals.INTERSECTED.node);
+//       }
+//     }
+//   }
+// }
 
 module.exports = {
   mouse: mouse

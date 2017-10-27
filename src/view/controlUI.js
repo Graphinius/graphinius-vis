@@ -1,3 +1,5 @@
+var defaults = require("../core/init.js").defaults;
+
 var force = require("../core/init.js").force_layout;
 var switchToFullScreen = require("./fullscreen").switchToFullScreen;
 
@@ -53,23 +55,21 @@ function startStopHistory() {
   }
 }
 
-document.querySelector("#force_magnitude").addEventListener('input', function(event) {
-  var mag = +document.querySelector("#force_magnitude").value;
-  force.magnitude = mag;
-  document.querySelector("#force_mag_display").innerHTML = mag;
-});
+// document.querySelector("#node_size_input").addEventListener('input', function(event) {
+//   var new_node_size = document.querySelector("#node_size_input").value;
+//   defaults.node_size = new_node_size;
+//   document.querySelector("#node_size").innerHTML = new_node_size;
+// });
 
-document.querySelector("#force_speed").addEventListener('input', function(event) {
-  var speed = +document.querySelector("#force_speed").value;
-  force.speed = speed;
-  document.querySelector("#force_speed_display").innerHTML = speed;
-});
 
-document.querySelector("#force_speed").addEventListener('input', function(event) {
-  var speed = +document.querySelector("#force_speed").value;
-  force.speed = speed;
-  document.querySelector("#force_speed_display").innerHTML = speed;
-});
+
+// document.querySelector("#force_speed").addEventListener('input', function(event) {
+//   var speed = +document.querySelector("#force_speed").value;
+//   force.speed = speed;
+//   document.querySelector("#force_speed_display").innerHTML = speed;
+// });
+
+
 
 module.exports = {
   startStopForce: startStopForce,
