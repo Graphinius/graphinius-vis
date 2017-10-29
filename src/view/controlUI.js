@@ -1,5 +1,4 @@
 var defaults = require("../core/init.js").defaults;
-
 var force = require("../core/init.js").force_layout;
 var switchToFullScreen = require("./fullscreen").switchToFullScreen;
 
@@ -71,14 +70,6 @@ function startStopHistory() {
 
 
 
-module.exports = {
-  startStopForce: startStopForce,
-  startStopHistory: startStopHistory,
-  setDirectionUnchecked: setDirectionUnchecked
-};
-
-
-
 /**
  * A vew standard view functions
  */
@@ -93,3 +84,11 @@ function onWindowResize() {
     globals.camera.updateProjectionMatrix();
     globals.renderer.setSize( window.innerWidth, window.innerHeight );
 }
+
+
+
+module.exports = {
+  startStopForce: startStopForce,
+  startStopHistory: startStopHistory,
+  setDirectionUnchecked: setDirectionUnchecked
+};

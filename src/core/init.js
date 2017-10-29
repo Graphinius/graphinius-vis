@@ -44,8 +44,7 @@ var config = {
     edge_opacity: 0.2,
     texture: loader.load(disc),
     
-    
-    //camera settings
+    // Camera settings
     fov: 90,
     near: 1,
     far: 1e4,

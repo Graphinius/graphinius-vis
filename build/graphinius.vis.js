@@ -145,8 +145,7 @@
 	    edge_opacity: 0.2,
 	    texture: loader.load(disc),
 	    
-	    
-	    //camera settings
+	    // Camera settings
 	    fov: 90,
 	    near: 1,
 	    far: 1e4,
@@ -353,6 +352,7 @@
 	      nodeColors[j++] = defaults.node_color.b/256.0;
 	    }
 
+	  
 	    nodeSizes[i] = 6;
 	    nodes_obj_idx[node]= i*3;
 	    i++;
@@ -444,7 +444,6 @@
 /***/ function(module, exports, __webpack_require__) {
 
 	var defaults = __webpack_require__(1).defaults;
-
 	var force = __webpack_require__(1).force_layout;
 	var switchToFullScreen = __webpack_require__(5).switchToFullScreen;
 
@@ -516,14 +515,6 @@
 
 
 
-	module.exports = {
-	  startStopForce: startStopForce,
-	  startStopHistory: startStopHistory,
-	  setDirectionUnchecked: setDirectionUnchecked
-	};
-
-
-
 	/**
 	 * A vew standard view functions
 	 */
@@ -538,6 +529,14 @@
 	    globals.camera.updateProjectionMatrix();
 	    globals.renderer.setSize( window.innerWidth, window.innerHeight );
 	}
+
+
+
+	module.exports = {
+	  startStopForce: startStopForce,
+	  startStopHistory: startStopHistory,
+	  setDirectionUnchecked: setDirectionUnchecked
+	};
 
 /***/ },
 /* 5 */
@@ -2412,6 +2411,44 @@
 	  }
 	  window.requestAnimationFrame(update);
 	}
+
+
+	/**
+	 * Hammer.js Controls (Touch)
+	 */ 
+
+	var main_el = document.getElementById("main_vis");
+
+	var mc = new Hammer.Manager(main_el, {
+		recognizers: [
+	    // RecognizerClass, [options], [recognizeWith, ...], [requireFailure, ...]
+	    [Hammer.Pan],
+			[Hammer.Rotate],
+			[Hammer.Pinch, { enable: true }, ['rotate']],
+			[Hammer.Swipe], // ,{ direction: Hammer.DIRECTION_HORIZONTAL }
+		]
+	});
+
+	var old_scale = 1;
+	mc.on("pinch", function(ev) {
+	  var new_z_pos = globals.camera.position.z - (ev.scale-old_scale) * 300;
+	  old_scale = ev.scale;
+	  new_z_pos = Math.min(new_z_pos, defaults.MAX_CAM_DISTANCE);
+	  new_z_pos = Math.max(new_z_pos, defaults.MIN_CAM_DISTANCE);
+	  globals.camera.position.z = new_z_pos;
+	  window.requestAnimationFrame(update);
+	  console.log(ev.scale-old_scale);
+	  console.log(new_z_pos);
+	});
+
+	mc.on("pan", function(ev) {
+	  console.log(ev.deltaX);
+	  // console.log(ev.deltaY);
+	  globals.camera.position.x -= ev.deltaX;
+	  globals.camera.position.y -= ev.deltaY;
+	  window.requestAnimationFrame(update);
+	});
+
 
 
 	container.element.addEventListener('mousemove', mouseMove, false);

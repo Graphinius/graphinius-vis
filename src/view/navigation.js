@@ -104,6 +104,44 @@ function mousewheel(event) {
 }
 
 
+/**
+ * Hammer.js Controls (Touch)
+ */ 
+
+var main_el = document.getElementById("main_vis");
+
+var mc = new Hammer.Manager(main_el, {
+	recognizers: [
+    // RecognizerClass, [options], [recognizeWith, ...], [requireFailure, ...]
+    [Hammer.Pan],
+		[Hammer.Rotate],
+		[Hammer.Pinch, { enable: true }, ['rotate']],
+		[Hammer.Swipe], // ,{ direction: Hammer.DIRECTION_HORIZONTAL }
+	]
+});
+
+var old_scale = 1;
+mc.on("pinch", function(ev) {
+  var new_z_pos = globals.camera.position.z - (ev.scale-old_scale) * 300;
+  old_scale = ev.scale;
+  new_z_pos = Math.min(new_z_pos, defaults.MAX_CAM_DISTANCE);
+  new_z_pos = Math.max(new_z_pos, defaults.MIN_CAM_DISTANCE);
+  globals.camera.position.z = new_z_pos;
+  window.requestAnimationFrame(update);
+  console.log(ev.scale-old_scale);
+  console.log(new_z_pos);
+});
+
+mc.on("pan", function(ev) {
+  console.log(ev.deltaX);
+  // console.log(ev.deltaY);
+  globals.camera.position.x -= ev.deltaX;
+  globals.camera.position.y -= ev.deltaY;
+  window.requestAnimationFrame(update);
+});
+
+
+
 container.element.addEventListener('mousemove', mouseMove, false);
 function mouseMove(event) {
 

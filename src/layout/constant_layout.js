@@ -70,6 +70,7 @@ function renderGraph(graph) {
       nodeColors[j++] = defaults.node_color.b/256.0;
     }
 
+  
     nodeSizes[i] = 6;
     nodes_obj_idx[node]= i*3;
     i++;
