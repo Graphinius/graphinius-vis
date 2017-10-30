@@ -105,9 +105,9 @@
 	var loader = new THREE.TextureLoader();
 	loader.crossOrigin = true;
 
-	var disc = "/img/disc.png";
-	var flake = "/img/snowflake.png";
-	var bernd = "/img/bernd.jpg";
+	var disc = "../../img/disc.png";
+	var flake = "../../img/snowflake.png";
+	var bernd = "../../img/bernd.jpg";
 
 	var config = {
 	  // keys for handling events
@@ -2403,7 +2403,7 @@
 	    }
 	  }
 	  else {
-	    var new_z_pos = globals.camera.position.z + defaults.CAM_Z_DELTA_FACTOR * delta;
+	    var new_z_pos = globals.camera.position.z - defaults.CAM_Z_DELTA_FACTOR * delta;
 	    new_z_pos = Math.min(new_z_pos, defaults.MAX_CAM_DISTANCE);
 	    new_z_pos = Math.max(new_z_pos, defaults.MIN_CAM_DISTANCE);
 	    globals.camera.position.z = new_z_pos;
@@ -2455,14 +2455,11 @@
 	  if ( ev.pointerType === 'mouse' ) {
 	    return;
 	  }
-
 	  var new_z_pos = globals.camera.position.z - (ev.scale-old_scale) * 20;
 	  new_z_pos = Math.min(new_z_pos, defaults.MAX_CAM_DISTANCE);
 	  new_z_pos = Math.max(new_z_pos, defaults.MIN_CAM_DISTANCE);
 	  globals.camera.position.z = new_z_pos;
 	  window.requestAnimationFrame(update);
-	  console.log(ev.scale-old_scale);
-	  console.log(new_z_pos);
 	});
 
 
@@ -2470,7 +2467,7 @@
 	var old_pos_y = globals.camera.position.y;
 	var old_deltaX = 0;
 	mc.on("pan", function(ev) {
-	  console.log(ev);
+	  // console.log(ev);
 	  if ( ev.pointerType === 'mouse' ) {
 	    return;
 	  }

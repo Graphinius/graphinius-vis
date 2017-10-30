@@ -4,9 +4,9 @@
 var loader = new THREE.TextureLoader();
 loader.crossOrigin = true;
 
-var disc = "/img/disc.png";
-var flake = "/img/snowflake.png";
-var bernd = "/img/bernd.jpg";
+var disc = "../../img/disc.png";
+var flake = "../../img/snowflake.png";
+var bernd = "../../img/bernd.jpg";
 
 var config = {
   // keys for handling events
