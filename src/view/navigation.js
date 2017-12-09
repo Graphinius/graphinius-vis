@@ -244,21 +244,21 @@ function freeStyle( event ) {
 }
 
 function confineXYMovement() {
-  var max_x = globals.graph_dims.MAX_X;
-  var max_y = globals.graph_dims.MAX_Y;
+  // var max_x = globals.graph_dims.MAX_X;
+  // var max_y = globals.graph_dims.MAX_Y;
 
-  if(globals.camera.position.x > max_x) {
-    globals.camera.position.x = max_x;
-  }
-  else if(globals.camera.position.x < -max_x) {
-    globals.camera.position.x = -max_x;
-  }
-  else if(globals.camera.position.y > max_y) {
-    globals.camera.position.y = max_y;
-  }
-  else if(globals.camera.position.y < -max_y) {
-    globals.camera.position.y = -max_y;
-  }
+  // if(globals.camera.position.x > max_x) {
+  //   globals.camera.position.x = max_x;
+  // }
+  // else if(globals.camera.position.x < -max_x) {
+  //   globals.camera.position.x = -max_x;
+  // }
+  // else if(globals.camera.position.y > max_y) {
+  //   globals.camera.position.y = max_y;
+  // }
+  // else if(globals.camera.position.y < -max_y) {
+  //   globals.camera.position.y = -max_y;
+  // }
 }
 
 

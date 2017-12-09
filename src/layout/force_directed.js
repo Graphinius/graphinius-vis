@@ -61,11 +61,11 @@ function init() {
   nodes = graph.getNodes();
   old_coordinates = new Float32Array(graph.nrNodes() * 3);
   var nodes = graph.getNodes();
-      
+  
   // BAD HACK!!!
-  var diff_x = first_init ? dims.AVG_X : 0;
-  var diff_y = first_init ? dims.AVG_Y : 0;
-  var diff_z = first_init ? dims.AVG_Z : 0;
+  var diff_x = first_init ? dims.AVG_X/2 : 0;
+  var diff_y = first_init ? dims.AVG_Y/2 : 0;
+  var diff_z = first_init ? dims.AVG_Z/2 : 0;
 
   // Create new bodies from graph nodes;
   for (var nodeID in nodes) {
