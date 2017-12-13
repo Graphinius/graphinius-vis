@@ -7,6 +7,9 @@ var container = require("../core/init.js").container;
 var mouse = require("../core/init.js").globals.mouse;
 var nodeIntersection = require("./interaction.js").nodeIntersection;
 var callbacks = require("../core/init.js").callbacks;
+var axes = require("../core/init.js").axes;
+
+console.log(axes);
 
 // for testing purposes
 var intersect_cb1 = function(node) {
@@ -14,10 +17,6 @@ var intersect_cb1 = function(node) {
 };
 callbacks.node_intersects.push(intersect_cb1);
 
-//rotation
-var axis_x = new THREE.Vector3( 1, 0, 0 ),
-    axis_y = new THREE.Vector3( 0, 1, 0 ),
-    axis_z = new THREE.Vector3( 0, 0, 1 );
 
 window.addEventListener('keypress', key, false);
 function key(event) {
@@ -36,30 +35,30 @@ function key(event) {
       network.translateZ(-defaults.delta_distance); break;
 
     case keys.KEY_X:
-      network.rotateOnAxis(axis_x, defaults.delta_rotation);
-      axis_y.applyAxisAngle(axis_x, -defaults.delta_rotation);
+      network.rotateOnAxis(axes.axis_x, defaults.delta_rotation);
+      axes.axis_y.applyAxisAngle(axes.axis_x, -defaults.delta_rotation);
       break;
     case keys.KEY_SX:
-      network.rotateOnAxis(axis_x, -defaults.delta_rotation);
-      axis_y.applyAxisAngle(axis_x, defaults.delta_rotation);
+      network.rotateOnAxis(axes.axis_x, -defaults.delta_rotation);
+      axes.axis_y.applyAxisAngle(axes.axis_x, defaults.delta_rotation);
       break;
     case keys.KEY_Y:
-      network.rotateOnAxis(axis_y, defaults.delta_rotation);
-      axis_x.applyAxisAngle(axis_y, -defaults.delta_rotation);
+      network.rotateOnAxis(axes.axis_y, defaults.delta_rotation);
+      axes.axis_x.applyAxisAngle(axes.axis_y, -defaults.delta_rotation);
       break;
     case keys.KEY_SY:
-      network.rotateOnAxis(axis_y, -defaults.delta_rotation);
-      axis_x.applyAxisAngle(axis_y, defaults.delta_rotation);
+      network.rotateOnAxis(axes.axis_y, -defaults.delta_rotation);
+      axes.axis_x.applyAxisAngle(axes.axis_y, defaults.delta_rotation);
       break;
     case keys.KEY_C:
-      network.rotateOnAxis(axis_z, defaults.delta_rotation);
-      axis_x.applyAxisAngle(axis_z, -defaults.delta_rotation);
-      axis_y.applyAxisAngle(axis_z, -defaults.delta_rotation);
+      network.rotateOnAxis(axes.axis_z, defaults.delta_rotation);
+      axes.axis_x.applyAxisAngle(axes.axis_z, -defaults.delta_rotation);
+      axes.axis_y.applyAxisAngle(axes.axis_z, -defaults.delta_rotation);
       break;
     case keys.KEY_SC:
-      network.rotateOnAxis(axis_z, -defaults.delta_rotation);
-      axis_x.applyAxisAngle(axis_z, defaults.delta_rotation);
-      axis_y.applyAxisAngle(axis_z, defaults.delta_rotation);
+      network.rotateOnAxis(axes.axis_z, -defaults.delta_rotation);
+      axes.axis_x.applyAxisAngle(axes.axis_z, defaults.delta_rotation);
+      axes.axis_y.applyAxisAngle(axes.axis_z, defaults.delta_rotation);
       break;
     default:
       break;
@@ -85,12 +84,12 @@ function mousewheel(event) {
 
   if(event.altKey) {
     if(delta < 0) {
-      network.rotateOnAxis(axis_y, -defaults.delta_rotation);
-      axis_x.applyAxisAngle(axis_y, defaults.delta_rotation);
+      network.rotateOnAxis(axes.axis_y, -defaults.delta_rotation);
+      axes.axis_x.applyAxisAngle(axes.axis_y, defaults.delta_rotation);
     }
     else {
-      network.rotateOnAxis(axis_y, defaults.delta_rotation);
-      axis_x.applyAxisAngle(axis_y, -defaults.delta_rotation);
+      network.rotateOnAxis(axes.axis_y, defaults.delta_rotation);
+      axes.axis_x.applyAxisAngle(axes.axis_y, -defaults.delta_rotation);
     }
   }
   else {
@@ -139,22 +138,22 @@ function mouseMove(event) {
 
 function freeStyle( event ) {
   if(event.movementX > 0) {
-    network.rotateOnAxis(axis_z, defaults.delta_rotation);
-    axis_x.applyAxisAngle(axis_z, -defaults.delta_rotation);
-    axis_y.applyAxisAngle(axis_z, -defaults.delta_rotation);
+    network.rotateOnAxis(axes.axis_z, defaults.delta_rotation);
+    axes.axis_x.applyAxisAngle(axes.axis_z, -defaults.delta_rotation);
+    axes.axis_y.applyAxisAngle(axes.axis_z, -defaults.delta_rotation);
   }
   else if(event.movementX < 0) {
-    network.rotateOnAxis(axis_z, -defaults.delta_rotation);
-    axis_x.applyAxisAngle(axis_z, defaults.delta_rotation);
-    axis_y.applyAxisAngle(axis_z, defaults.delta_rotation);
+    network.rotateOnAxis(axes.axis_z, -defaults.delta_rotation);
+    axes.axis_x.applyAxisAngle(axes.axis_z, defaults.delta_rotation);
+    axes.axis_y.applyAxisAngle(axes.axis_z, defaults.delta_rotation);
   }
   else if(event.movementY > 0) {
-    network.rotateOnAxis(axis_x, defaults.delta_rotation);
-    axis_y.applyAxisAngle(axis_x, -defaults.delta_rotation);
+    network.rotateOnAxis(axes.axis_x, defaults.delta_rotation);
+    axes.axis_y.applyAxisAngle(axes.axis_x, -defaults.delta_rotation);
   }
   else if(event.movementY < 0) {
-    network.rotateOnAxis(axis_x, -defaults.delta_rotation);
-    axis_y.applyAxisAngle(axis_x, defaults.delta_rotation);
+    network.rotateOnAxis(axes.axis_x, -defaults.delta_rotation);
+    axes.axis_y.applyAxisAngle(axes.axis_x, defaults.delta_rotation);
   }
 }
 
@@ -199,5 +198,6 @@ function confineXYMovement() {
 
 module.exports = {
   mouse: mouse,
-  freeStyle: freeStyle
+  freeStyle: freeStyle,
+  confineXYMovement: confineXYMovement
 };

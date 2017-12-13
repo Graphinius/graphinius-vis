@@ -9,6 +9,11 @@ var flake = "../../img/snowflake.png";
 var bernd = "../../img/bernd.jpg";
 
 var config = {
+  axes: {
+    axis_x: new THREE.Vector3( 1, 0, 0 ),
+    axis_y: new THREE.Vector3( 0, 1, 0 ),
+    axis_z: new THREE.Vector3( 0, 0, 1 )
+  },
   // keys for handling events
   keys: {
     KEY_A: 97,

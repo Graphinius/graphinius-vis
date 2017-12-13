@@ -110,6 +110,11 @@
 	var bernd = "../../img/bernd.jpg";
 
 	var config = {
+	  axes: {
+	    axis_x: new THREE.Vector3( 1, 0, 0 ),
+	    axis_y: new THREE.Vector3( 0, 1, 0 ),
+	    axis_z: new THREE.Vector3( 0, 0, 1 )
+	  },
 	  // keys for handling events
 	  keys: {
 	    KEY_A: 97,
@@ -2316,6 +2321,9 @@
 	var mouse = __webpack_require__(1).globals.mouse;
 	var nodeIntersection = __webpack_require__(18).nodeIntersection;
 	var callbacks = __webpack_require__(1).callbacks;
+	var axes = __webpack_require__(1).axes;
+
+	console.log(axes);
 
 	// for testing purposes
 	var intersect_cb1 = function(node) {
@@ -2323,10 +2331,6 @@
 	};
 	callbacks.node_intersects.push(intersect_cb1);
 
-	//rotation
-	var axis_x = new THREE.Vector3( 1, 0, 0 ),
-	    axis_y = new THREE.Vector3( 0, 1, 0 ),
-	    axis_z = new THREE.Vector3( 0, 0, 1 );
 
 	window.addEventListener('keypress', key, false);
 	function key(event) {
@@ -2345,30 +2349,30 @@
 	      network.translateZ(-defaults.delta_distance); break;
 
 	    case keys.KEY_X:
-	      network.rotateOnAxis(axis_x, defaults.delta_rotation);
-	      axis_y.applyAxisAngle(axis_x, -defaults.delta_rotation);
+	      network.rotateOnAxis(axes.axis_x, defaults.delta_rotation);
+	      axes.axis_y.applyAxisAngle(axes.axis_x, -defaults.delta_rotation);
 	      break;
 	    case keys.KEY_SX:
-	      network.rotateOnAxis(axis_x, -defaults.delta_rotation);
-	      axis_y.applyAxisAngle(axis_x, defaults.delta_rotation);
+	      network.rotateOnAxis(axes.axis_x, -defaults.delta_rotation);
+	      axes.axis_y.applyAxisAngle(axes.axis_x, defaults.delta_rotation);
 	      break;
 	    case keys.KEY_Y:
-	      network.rotateOnAxis(axis_y, defaults.delta_rotation);
-	      axis_x.applyAxisAngle(axis_y, -defaults.delta_rotation);
+	      network.rotateOnAxis(axes.axis_y, defaults.delta_rotation);
+	      axes.axis_x.applyAxisAngle(axes.axis_y, -defaults.delta_rotation);
 	      break;
 	    case keys.KEY_SY:
-	      network.rotateOnAxis(axis_y, -defaults.delta_rotation);
-	      axis_x.applyAxisAngle(axis_y, defaults.delta_rotation);
+	      network.rotateOnAxis(axes.axis_y, -defaults.delta_rotation);
+	      axes.axis_x.applyAxisAngle(axes.axis_y, defaults.delta_rotation);
 	      break;
 	    case keys.KEY_C:
-	      network.rotateOnAxis(axis_z, defaults.delta_rotation);
-	      axis_x.applyAxisAngle(axis_z, -defaults.delta_rotation);
-	      axis_y.applyAxisAngle(axis_z, -defaults.delta_rotation);
+	      network.rotateOnAxis(axes.axis_z, defaults.delta_rotation);
+	      axes.axis_x.applyAxisAngle(axes.axis_z, -defaults.delta_rotation);
+	      axes.axis_y.applyAxisAngle(axes.axis_z, -defaults.delta_rotation);
 	      break;
 	    case keys.KEY_SC:
-	      network.rotateOnAxis(axis_z, -defaults.delta_rotation);
-	      axis_x.applyAxisAngle(axis_z, defaults.delta_rotation);
-	      axis_y.applyAxisAngle(axis_z, defaults.delta_rotation);
+	      network.rotateOnAxis(axes.axis_z, -defaults.delta_rotation);
+	      axes.axis_x.applyAxisAngle(axes.axis_z, defaults.delta_rotation);
+	      axes.axis_y.applyAxisAngle(axes.axis_z, defaults.delta_rotation);
 	      break;
 	    default:
 	      break;
@@ -2394,12 +2398,12 @@
 
 	  if(event.altKey) {
 	    if(delta < 0) {
-	      network.rotateOnAxis(axis_y, -defaults.delta_rotation);
-	      axis_x.applyAxisAngle(axis_y, defaults.delta_rotation);
+	      network.rotateOnAxis(axes.axis_y, -defaults.delta_rotation);
+	      axes.axis_x.applyAxisAngle(axes.axis_y, defaults.delta_rotation);
 	    }
 	    else {
-	      network.rotateOnAxis(axis_y, defaults.delta_rotation);
-	      axis_x.applyAxisAngle(axis_y, -defaults.delta_rotation);
+	      network.rotateOnAxis(axes.axis_y, defaults.delta_rotation);
+	      axes.axis_x.applyAxisAngle(axes.axis_y, -defaults.delta_rotation);
 	    }
 	  }
 	  else {
@@ -2448,22 +2452,22 @@
 
 	function freeStyle( event ) {
 	  if(event.movementX > 0) {
-	    network.rotateOnAxis(axis_z, defaults.delta_rotation);
-	    axis_x.applyAxisAngle(axis_z, -defaults.delta_rotation);
-	    axis_y.applyAxisAngle(axis_z, -defaults.delta_rotation);
+	    network.rotateOnAxis(axes.axis_z, defaults.delta_rotation);
+	    axes.axis_x.applyAxisAngle(axes.axis_z, -defaults.delta_rotation);
+	    axes.axis_y.applyAxisAngle(axes.axis_z, -defaults.delta_rotation);
 	  }
 	  else if(event.movementX < 0) {
-	    network.rotateOnAxis(axis_z, -defaults.delta_rotation);
-	    axis_x.applyAxisAngle(axis_z, defaults.delta_rotation);
-	    axis_y.applyAxisAngle(axis_z, defaults.delta_rotation);
+	    network.rotateOnAxis(axes.axis_z, -defaults.delta_rotation);
+	    axes.axis_x.applyAxisAngle(axes.axis_z, defaults.delta_rotation);
+	    axes.axis_y.applyAxisAngle(axes.axis_z, defaults.delta_rotation);
 	  }
 	  else if(event.movementY > 0) {
-	    network.rotateOnAxis(axis_x, defaults.delta_rotation);
-	    axis_y.applyAxisAngle(axis_x, -defaults.delta_rotation);
+	    network.rotateOnAxis(axes.axis_x, defaults.delta_rotation);
+	    axes.axis_y.applyAxisAngle(axes.axis_x, -defaults.delta_rotation);
 	  }
 	  else if(event.movementY < 0) {
-	    network.rotateOnAxis(axis_x, -defaults.delta_rotation);
-	    axis_y.applyAxisAngle(axis_x, defaults.delta_rotation);
+	    network.rotateOnAxis(axes.axis_x, -defaults.delta_rotation);
+	    axes.axis_y.applyAxisAngle(axes.axis_x, defaults.delta_rotation);
 	  }
 	}
 
@@ -2508,7 +2512,8 @@
 
 	module.exports = {
 	  mouse: mouse,
-	  freeStyle: freeStyle
+	  freeStyle: freeStyle,
+	  confineXYMovement: confineXYMovement
 	};
 
 
@@ -2526,17 +2531,12 @@
 	var nodeIntersection = __webpack_require__(18).nodeIntersection;
 	var callbacks = __webpack_require__(1).callbacks;
 	var freeStyle = __webpack_require__(19).freeStyle;
+	var confineXYMovement = __webpack_require__(19).confineXYMovement;
+	var axes = __webpack_require__(1).axes;
 
 	/**
 	 * Hammer.js Controls (Touch)
 	 */ 
-
-
-	 //rotation
-	var axis_x = new THREE.Vector3( 1, 0, 0 ),
-	axis_y = new THREE.Vector3( 0, 1, 0 ),
-	axis_z = new THREE.Vector3( 0, 0, 1 );
-
 
 	var main_el = document.getElementById("main_vis");
 
@@ -2558,14 +2558,14 @@
 	  }
 	  // console.log(ev);  
 	  if ( ev.rotation < old_rotation ) {
-	    network.rotateOnAxis(axis_z, defaults.delta_rotation/2);
-	    axis_x.applyAxisAngle(axis_z, -defaults.delta_rotation/2);
-	    axis_y.applyAxisAngle(axis_z, -defaults.delta_rotation/2);
+	    network.rotateOnAxis(axes.axis_z, defaults.delta_rotation/2);
+	    axes.axis_x.applyAxisAngle(axes.axis_z, -defaults.delta_rotation/2);
+	    axes.axis_y.applyAxisAngle(axes.axis_z, -defaults.delta_rotation/2);
 	  }
 	  else {
-	    network.rotateOnAxis(axis_z, -defaults.delta_rotation/2);
-	    axis_x.applyAxisAngle(axis_z, defaults.delta_rotation/2);
-	    axis_y.applyAxisAngle(axis_z, defaults.delta_rotation/2);
+	    network.rotateOnAxis(axes.axis_z, -defaults.delta_rotation/2);
+	    axes.axis_x.applyAxisAngle(axes.axis_z, defaults.delta_rotation/2);
+	    axes.axis_y.applyAxisAngle(axes.axis_z, defaults.delta_rotation/2);
 	  }
 	  old_rotation = ev.rotation;
 	})
@@ -2597,12 +2597,12 @@
 	  }
 	  else if ( ev.srcEvent.altKey ) {
 	    if ( ev.deltaX > old_deltaX ) {
-	      network.rotateOnAxis(axis_y, defaults.delta_rotation);
-	      axis_x.applyAxisAngle(axis_y, -defaults.delta_rotation);
+	      network.rotateOnAxis(axes.axis_y, defaults.delta_rotation);
+	      axes.axis_x.applyAxisAngle(axes.axis_y, -defaults.delta_rotation);
 	    }
 	    else {
-	      network.rotateOnAxis(axis_y, -defaults.delta_rotation);
-	      axis_x.applyAxisAngle(axis_y, defaults.delta_rotation);
+	      network.rotateOnAxis(axes.axis_y, -defaults.delta_rotation);
+	      axes.axis_x.applyAxisAngle(axes.axis_y, defaults.delta_rotation);
 	    }
 	    old_deltaX = ev.deltaX;
 	  }

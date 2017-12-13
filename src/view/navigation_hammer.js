@@ -8,17 +8,12 @@ var mouse = require("../core/init.js").globals.mouse;
 var nodeIntersection = require("./interaction.js").nodeIntersection;
 var callbacks = require("../core/init.js").callbacks;
 var freeStyle = require("./navigation.js").freeStyle;
+var confineXYMovement = require("./navigation.js").confineXYMovement;
+var axes = require("../core/init.js").axes;
 
 /**
  * Hammer.js Controls (Touch)
  */ 
-
-
- //rotation
-var axis_x = new THREE.Vector3( 1, 0, 0 ),
-axis_y = new THREE.Vector3( 0, 1, 0 ),
-axis_z = new THREE.Vector3( 0, 0, 1 );
-
 
 var main_el = document.getElementById("main_vis");
 
@@ -40,14 +35,14 @@ mc.on("rotate", function(ev) {
   }
   // console.log(ev);  
   if ( ev.rotation < old_rotation ) {
-    network.rotateOnAxis(axis_z, defaults.delta_rotation/2);
-    axis_x.applyAxisAngle(axis_z, -defaults.delta_rotation/2);
-    axis_y.applyAxisAngle(axis_z, -defaults.delta_rotation/2);
+    network.rotateOnAxis(axes.axis_z, defaults.delta_rotation/2);
+    axes.axis_x.applyAxisAngle(axes.axis_z, -defaults.delta_rotation/2);
+    axes.axis_y.applyAxisAngle(axes.axis_z, -defaults.delta_rotation/2);
   }
   else {
-    network.rotateOnAxis(axis_z, -defaults.delta_rotation/2);
-    axis_x.applyAxisAngle(axis_z, defaults.delta_rotation/2);
-    axis_y.applyAxisAngle(axis_z, defaults.delta_rotation/2);
+    network.rotateOnAxis(axes.axis_z, -defaults.delta_rotation/2);
+    axes.axis_x.applyAxisAngle(axes.axis_z, defaults.delta_rotation/2);
+    axes.axis_y.applyAxisAngle(axes.axis_z, defaults.delta_rotation/2);
   }
   old_rotation = ev.rotation;
 })
@@ -79,12 +74,12 @@ mc.on("pan", function(ev) {
   }
   else if ( ev.srcEvent.altKey ) {
     if ( ev.deltaX > old_deltaX ) {
-      network.rotateOnAxis(axis_y, defaults.delta_rotation);
-      axis_x.applyAxisAngle(axis_y, -defaults.delta_rotation);
+      network.rotateOnAxis(axes.axis_y, defaults.delta_rotation);
+      axes.axis_x.applyAxisAngle(axes.axis_y, -defaults.delta_rotation);
     }
     else {
-      network.rotateOnAxis(axis_y, -defaults.delta_rotation);
-      axis_x.applyAxisAngle(axis_y, defaults.delta_rotation);
+      network.rotateOnAxis(axes.axis_y, -defaults.delta_rotation);
+      axes.axis_x.applyAxisAngle(axes.axis_y, defaults.delta_rotation);
     }
     old_deltaX = ev.deltaX;
   }
