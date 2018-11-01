@@ -536,6 +536,43 @@
 	}
 
 
+	/**
+	 * BG control event listeners
+	 */
+	let style = {
+	  backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url(../img/tron_grid.jpg)`,
+	  backgroundSize: "cover",
+	  backgroundPosition: "50% 50%",
+	  backgroundAttachment: "fixed"
+	};
+
+	let bgOnOffButton = document.querySelector("#bg-on-off-button");
+	bgOnOffButton.addEventListener('click', (e) => {
+	  e.target.classList.toggle('on');
+	  let on = e.target.classList.contains('on');
+	  e.target.innerHTML = on ? "ON" : "OFF";
+	  let bgc = document.querySelector("#bg-cover");
+	  if (on) {
+	    Object.assign(bgc.style, style);
+	  } else {
+	    bgc.style.background = "#111";
+	  }
+	});
+
+	document.querySelector("#bg-brightness").addEventListener('input', (e) => {
+	  let brightness = 1 - e.target.value/100;
+	  style.backgroundImage = `linear-gradient(rgba(0, 0, 0, ${brightness}), rgba(0, 0, 0, ${brightness})), url(../img/tron_grid.jpg)`
+	  let cover = document.querySelector("#bg-cover");
+	  Object.assign(cover.style, style);
+	});
+
+	document.querySelector("#bg-blur").addEventListener('input', (e) => {
+	  let blur = e.target.value/5;
+	  document.querySelector("#bg-cover").style.filter = `blur(${blur}px)`;
+	  document.querySelector("#bg-cover").style.webkitFilter = `blur(${blur}px)`;
+	});
+
+
 
 	module.exports = {
 	  startStopForce: startStopForce,

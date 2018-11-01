@@ -155,24 +155,46 @@ h1 {
   margin-bottom: 10px;
 }
 
-#bg-blurry {
-  /* color: #111; */
-  z-index: -5;
-  position: fixed;
-  
+#bg-cover {
+  position: fixed;  
   top: -15px;
   left: -15px;
   right: -15px;
   bottom: -15px;
+  z-index: -5;
   background:
     /* top, transparent black, faked with gradient */
     linear-gradient(
-      rgba(0, 0, 0, 0.8),
-      rgba(0, 0, 0, 0.8)
+      rgba(0, 0, 0, 0.2),
+      rgba(0, 0, 0, 0.2)
     ),
-    url(../img/osneb3.jpg) fixed;
-    background-size: cover;
-    background-position: 50% 50%;
-    -webkit-filter: blur(10px);
-    filter: blur(10px);
+    url(../img/tron_grid.jpg) fixed;
+
+  background-size: cover;
+  background-position: 50% 50%;
+  -webkit-filter: blur(0px);
+  filter: blur(0px);
+}
+
+#bg-controls {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  padding: 15px;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+#bg-on-off-button {
+  padding: 5px;
+  text-align: center;
+  font-weight: bold;
+  background-color: rgba(255, 20, 20, 1);
+}
+
+#bg-on-off-button.on {
+  background-color: rgba(20, 255, 20, 1);
+}
+
+#bg-on-off-button:hover {
+  cursor: pointer;
 }

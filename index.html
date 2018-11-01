@@ -6,6 +6,24 @@
 
 	<body>    
     <div class="container">
+
+      <div id="bg-cover" class="on"></div>
+
+
+      <div id="bg-controls">
+        <h2>BG controls</h2>
+
+        <h5>BG on / off</h5>
+        <div id="bg-on-off-button" class="on">ON</div>
+
+        <h5>Brightness</h5>
+        <input type="range" min="1" max="100" value="80" class="slider" id="bg-brightness">
+
+        <h5>Blur</h5>
+        <input type="range" min="1" max="100" value="0" class="slider" id="bg-blur">
+      </div>
+      
+      
       <div id="main_controls">
         <h2>Options</h2>
         
@@ -49,10 +67,12 @@
        
         <input id="switch2DButton" value="Switch to 2D" type="button" onclick=$GV.view.interaction.switchTo2D()><br/>
         <input id="switch3DButton" value="Switch to 3D" type="button" onclick=$GV.view.interaction.switchTo3D()><br/><br/>
-        <!--<input id="changeNodeColorButton" value="Change Node Color" type="button" onclick=$GV.core.mutate.colorAllNodes(0)><br/>
+        
+        <!-- <input id="changeNodeColorButton" value="Change Node Color" type="button" onclick=$GV.core.mutate.colorAllNodes(0)><br/>
         <input id="changeEdgeColorButton" value="Change Edge Color" type="button" onclick=$GV.core.mutate.colorAllEdges(0)><br/><br/>
         <input id="addRandomNodesButton" value="Add Random Node" type="button" onclick=$GV.core.mutate.addRandomNodes()><br/>
-        <input id="updateAllNodesButton" value="Update All Nodes" type="button" onclick=$GV.view.interaction.updateAll()><br/><br/>-->
+        <input id="updateAllNodesButton" value="Update All Nodes" type="button" onclick=$GV.view.interaction.updateAll()><br/><br/> -->
+
         <input id="randomBFSButton" value="BFS (random)" type="button" onclick=$GV.core.mutate.colorBFS(null)><br/>
         <input id="chosenBFSButton" value="BFS (click)" type="button" onclick=$GV.core.mutate.colorBFSclick()><br/><br/>
         <input id="randomPFSButton" value="PFS (random)" type="button" onclick=$GV.core.mutate.colorPFS(null)><br/>
@@ -80,7 +100,7 @@
         
 
       <div id="main_vis">
-					<!--<div id="fullscreenSwitch" onclick=$GV.view.fullscreen.switchToFullScreen('#containerGraph')> Fullscreen </div>          -->
+					<!-- <div id="fullscreenSwitch" onclick=$GV.view.fullscreen.switchToFullScreen('#containerGraph')> Fullscreen </div>          -->
           
             <!-- <div id="nodeInfo">Node ID: <span id="nodeID"></span></div> -->
                         
@@ -94,8 +114,6 @@
           </div>
           
     </div>
-    
-    <div id="bg-blurry">
 
     <script type="text/javascript" src="lib/three.min.js"></script>
     <script type="text/javascript" src="lib/hammer.min.js"></script>
