@@ -2,6 +2,7 @@
 	<head>
 		<title>GraphiniusVIS</title>
     <link rel="stylesheet" type="text/css" href="css/index.css">
+    <link rel="stylesheet" type="text/css" href="css/cookiebanner.css">
 	</head>
 
 	<body>    
@@ -9,12 +10,21 @@
 
       <div id="bg-cover" class="on"></div>
 
+      <!-- Most important section of all the site -->
+      <div id="cookieBanner">
+        <span class="cookieBannerText">
+          This website uses cookies to track user traffic via Google Analytics in accordance with the European General Data Protection Regulations (GDPR). Please have a look at our <a href="/gdpr/privacyPolicy.pdf" target="_blank"/>Privacy Policy</a>, our <a href="/gdpr/cookiePolicy.pdf" target="_blank"/>Cookie Policy</a> or read the Google Analytics <a href="https://support.google.com/analytics/answer/3379636" target="_blank">Data Processing Terms</a>. Please confirm your agreement by clicking "OK".
+          </span>
+
+          <span id="cookieBannerOKButton" class="noselect" onclick="acceptsGACookie()">OK</span>
+      </div>
+
 
       <div id="bg-controls">
         <h2>BG controls</h2>
 
         <h5>BG on / off</h5>
-        <div id="bg-on-off-button" class="on">ON</div>
+        <div id="bg-on-off-button" class="on noselect">ON</div>
 
         <h5>Brightness</h5>
         <input type="range" min="1" max="100" value="80" class="slider" id="bg-brightness">
@@ -142,6 +152,7 @@
       }
       requestAnimationFrame( animate );  
     </script>
+    <script type="text/javascript" src="./src/helpers/gaCookies.js"></script>
     
    
   </body>

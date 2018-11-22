@@ -1,0 +1,52 @@
+#cookieBanner {
+  position: fixed;
+  top: 0;
+  left: 300px;
+  right: 300px;
+  min-width: 400px;
+  min-height: 70px;
+  padding: 20px;
+  font-family: sans-serif;
+  color: #eee;
+  background-color: rgba(30, 30, 30, 0.7);
+  box-shadow: 4px 4px 14px purple, -4px 4px 14px purple;
+  z-index: 10;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
+  
+}
+
+#cookieBanner a {
+  color: lightblue;
+}
+
+#cookieBanner a:visited {
+  color: #777;
+}
+
+.cookieBannerText {
+  display: inline-block;
+  left: 0;
+  right: 150px;
+  padding: 12px 30px 12px 12px;
+  font-size: 18px;
+}
+
+#cookieBannerOKButton {
+  min-width: 80px;
+  background-color: #88ff4d;
+  padding: 15px;
+  font-size: 32px;
+  font-weight: bold;
+  color: black;
+  border-radius: 10px;
+  text-align: center;
+}
+
+#cookieBannerOKButton:hover {
+  cursor: pointer;
+}
