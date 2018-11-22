@@ -1,8 +1,8 @@
 #cookieBanner {
   position: fixed;
   top: 0;
-  left: 300px;
-  right: 300px;
+  left: 250px;
+  right: 250px;
   min-width: 400px;
   min-height: 70px;
   padding: 20px;
@@ -15,9 +15,16 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  text-align: center;
+  text-align: center; 
+}
 
-  
+@media screen and (max-width: 940px) {
+  #cookieBanner {
+    left: 0;
+    right: 0;
+    min-width: 0;
+    background-color: rgba(30, 30, 30, 1);
+  }
 }
 
 #cookieBanner a {
@@ -33,7 +40,7 @@
   left: 0;
   right: 150px;
   padding: 12px 30px 12px 12px;
-  font-size: 18px;
+  font-size: 16px;
 }
 
 #cookieBannerOKButton {
