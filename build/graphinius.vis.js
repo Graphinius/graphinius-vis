@@ -107,6 +107,8 @@
 
 	const IMG_PREFIX = document.location.hostname === 'localhost' ? '../../img/' : '/GraphiniusVis/img/';
 
+	console.log(`IMG_PREFIX set to ${IMG_PREFIX}`);
+
 	var disc = IMG_PREFIX + "disc.png";
 	var flake = IMG_PREFIX + "snowflake.png";
 	var bernd = IMG_PREFIX + "bernd.jpg";
@@ -541,8 +543,6 @@
 	 * @todo when re-writing all this in ES6 / Typescript, replace with import
 	 */
 	const IMG_PREFIX = document.location.hostname === 'localhost' ? '../../img/' : '/GraphiniusVis/img/';
-
-	console.log(IMG_PREFIX);
 
 	/**
 	 * BG control event listeners
