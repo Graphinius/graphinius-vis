@@ -85,12 +85,16 @@ function onWindowResize() {
     globals.renderer.setSize( window.innerWidth, window.innerHeight );
 }
 
+/**
+ * @todo when re-writing all this in ES6 / Typescript, replace with import
+ */
+const IMG_PREFIX = document.location.hostname === 'localhost' ? '../../img/' : '/GraphiniusVis/img/';
 
 /**
  * BG control event listeners
  */
 let style = {
-  backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url(../img/tron_grid.jpg)`,
+  backgroundImage: `linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.2)), url(${IMG_PREFIX}tron_grid.jpg)`,
   backgroundSize: "cover",
   backgroundPosition: "50% 50%",
   backgroundAttachment: "fixed"
@@ -111,7 +115,7 @@ bgOnOffButton.addEventListener('click', (e) => {
 
 document.querySelector("#bg-brightness").addEventListener('input', (e) => {
   let brightness = 1 - e.target.value/100;
-  style.backgroundImage = `linear-gradient(rgba(0, 0, 0, ${brightness}), rgba(0, 0, 0, ${brightness})), url(../img/tron_grid.jpg)`
+  style.backgroundImage = `linear-gradient(rgba(0, 0, 0, ${brightness}), rgba(0, 0, 0, ${brightness})), url(${IMG_PREFIX}tron_grid.jpg)`
   let cover = document.querySelector("#bg-cover");
   Object.assign(cover.style, style);
 });
@@ -121,7 +125,6 @@ document.querySelector("#bg-blur").addEventListener('input', (e) => {
   document.querySelector("#bg-cover").style.filter = `blur(${blur}px)`;
   document.querySelector("#bg-cover").style.webkitFilter = `blur(${blur}px)`;
 });
-
 
 
 module.exports = {

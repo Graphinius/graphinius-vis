@@ -4,9 +4,11 @@
 var loader = new THREE.TextureLoader();
 loader.crossOrigin = true;
 
-var disc = "../../img/disc.png";
-var flake = "../../img/snowflake.png";
-var bernd = "../../img/bernd.jpg";
+const IMG_PREFIX = document.location.hostname === 'localhost' ? '../../img/' : '/GraphiniusVis/img/';
+
+var disc = IMG_PREFIX + "disc.png";
+var flake = IMG_PREFIX + "snowflake.png";
+var bernd = IMG_PREFIX + "bernd.jpg";
 
 var config = {
   axes: {

@@ -121,7 +121,6 @@ h1 {
 .onoffswitch-checkbox:checked + .onoffswitch-label .onoffswitch-switch {
     right: 0px; 
 }
-
 .onoffswitch-inner.force:before {
     content: "Constant";
     padding-left: 11px;
@@ -133,7 +132,6 @@ h1 {
     background-color: #2B97F0; color: #FFFFFF;
     text-align: right;
 }
-
 .onoffswitch-inner.history:before {
     content: "ON";
     padding-left: 11px;
@@ -211,4 +209,3 @@ h1 {
 #bg-on-off-button:hover {
   cursor: pointer;
 }
-
