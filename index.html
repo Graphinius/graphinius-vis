@@ -52,6 +52,9 @@
         
         
         <h3>Graph Input</h3>
+          <button id="loadSampleGraphsListing" onclick="getGraphsDirectoryListing()">Load sample graph</button>
+          <button id="loadSampleGraphsCitiesListing" onclick="getGraphsCategoryListing('cities')">Load city graphs</button>
+
           <form>
             <input type="radio" id="undirected" name="direction" value="undirected" onclick><label for="undirected">undirected graph</label><br>
             <input type="radio" id="directed" name="direction" value="directed" onclick><label for="directed">directed graph</label><br><br>
@@ -134,6 +137,8 @@
     <script type="text/javascript" src="lib/hammer.time.min.js"></script>
 		<script type="text/javascript" src="lib/graphinius.min.js"></script>
     <script type="text/javascript" src="build/graphinius.vis.js"></script>
+    <script type="text/javascript" src="./fetchResources.js"></script> 
+    <!-- https://berndmalle.com/graphinius-sample-data -->
     
     <!-- FPS Counter -->
     <script src='//rawgit.com/mrdoob/stats.js/master/build/stats.min.js'></script>
