@@ -57,7 +57,8 @@
 	    fullscreen      = __webpack_require__(5),
 	    interaction     = __webpack_require__(18),
 	    navigation      = __webpack_require__(19),
-	    navigation      = __webpack_require__(20),    controlUI       = __webpack_require__(4);
+	    navigation      = __webpack_require__(20),    
+	    controlUI       = __webpack_require__(4);
 	    
 
 	var out = typeof window !== 'undefined' ? window : global;
@@ -1114,7 +1115,7 @@
 
 	  //checks if the browser supports the file API
 	  if (!window.File && window.FileReader && window.FileList && window.Blob) {
-	    alert("Browser does not support the File API.");
+	    alert("ERROR: Browser does not support the File API.");
 	  }
 
 	  var files = document.getElementById('input').files;
@@ -1126,14 +1127,9 @@
 	  //only json files
 	  splitFileName = files[0].name.split(".");
 	  if(!splitFileName.pop().match('json')) {
-	    alert("Invalid file type - it must be a json file.");
+	    alert("ERROR: Invalid file type - can only load json files.");
 	    return;
 	  }
-	  // -> only works in firefox - chrome has no file.type
-	  /*if (!files[0].type.match('json')){
-	    alert('Wrong file type.');
-	    return;
-	  }*/
 
 	  var reader = new FileReader();
 	  var result = null;
@@ -1142,8 +1138,15 @@
 	    if (event.target.readyState == FileReader.DONE) {
 	      //console.log(event.target.result);
 	      var parsedFile = JSON.parse(event.target.result);
+
+	      /**
+	       * THIS line is where the graph is actually read...
+	       */
 	      window.graph = json.readFromJSON(parsedFile);
 
+	      /**
+	       * @todo {action} OMG refactor !!!
+	       */
 	      document.querySelector("#nodes").innerHTML = window.graph.nrNodes();
 	      document.querySelector("#dir-edges").innerHTML = window.graph.nrDirEdges();
 	      document.querySelector("#und-edges").innerHTML = window.graph.nrUndEdges();

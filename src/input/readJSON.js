@@ -15,7 +15,7 @@ function readJSON(event, explicit, direction, weighted_mode) {
 
   //checks if the browser supports the file API
   if (!window.File && window.FileReader && window.FileList && window.Blob) {
-    alert("Browser does not support the File API.");
+    alert("ERROR: Browser does not support the File API.");
   }
 
   var files = document.getElementById('input').files;
@@ -27,14 +27,9 @@ function readJSON(event, explicit, direction, weighted_mode) {
   //only json files
   splitFileName = files[0].name.split(".");
   if(!splitFileName.pop().match('json')) {
-    alert("Invalid file type - it must be a json file.");
+    alert("ERROR: Invalid file type - can only load json files.");
     return;
   }
-  // -> only works in firefox - chrome has no file.type
-  /*if (!files[0].type.match('json')){
-    alert('Wrong file type.');
-    return;
-  }*/
 
   var reader = new FileReader();
   var result = null;
@@ -43,8 +38,15 @@ function readJSON(event, explicit, direction, weighted_mode) {
     if (event.target.readyState == FileReader.DONE) {
       //console.log(event.target.result);
       var parsedFile = JSON.parse(event.target.result);
+
+      /**
+       * THIS line is where the graph is actually read...
+       */
       window.graph = json.readFromJSON(parsedFile);
 
+      /**
+       * @todo {action} OMG refactor !!!
+       */
       document.querySelector("#nodes").innerHTML = window.graph.nrNodes();
       document.querySelector("#dir-edges").innerHTML = window.graph.nrDirEdges();
       document.querySelector("#und-edges").innerHTML = window.graph.nrUndEdges();

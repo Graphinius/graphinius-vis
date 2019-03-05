@@ -35,10 +35,101 @@ h1 {
   padding: 10px;
 }
 
+button, input[type=button] {
+  padding: 5px;
+  width: 140px;
+  margin: 5px;
+  background-color: rgb(255, 248, 48);
+  border: none;
+  border-radius: 3px;
+  font-weight: bolder;
+}
+
+button:hover, input[type=button]:hover {
+  cursor: pointer;
+  /* background-color: rgb(255, 248, 48); */
+  background-color: #88FF4D;
+}
+
 .button {
   font-family: "Sans-Serif", "Calibri";
   font-size: 14px;
 }
+
+#loadSampleGraphsListing {
+  padding: 8px;
+  font-size: 24px;
+}
+
+#graph-modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 600px;
+  height: 500px;
+  color: #ccc;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 20px;
+  border-radius: 15px;
+  transform: translate(-50%, -50%);
+  text-align: center;
+
+  display: none;
+}
+
+#graph-modal.visible {
+  display: block;
+}
+
+#graph-modal .header {
+  font-size: 30px;
+}
+
+#graph-modal .footer {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  font-size: 30px;
+}
+
+#graph-modal .footer button {
+  padding: 10px;
+  width: 35%;
+  font-size: 20px;
+}
+
+#graph-modal .entries {
+  position: absolute;
+  top: 70px;
+  right: 50px;
+  bottom: 60px;
+  left: 50px;
+  text-align: left;
+  /* margin-left: 50px; */
+  /* background-color: red; */
+  overflow: auto;
+}
+
+#graph-modal .entries .graph-list-entry {
+  background-color: rgba(30, 30, 30, 0.5);
+  border-radius: 5px;
+  padding: 8px 8px 8px 20px;
+  margin-bottom: 8px;
+}
+
+#graph-modal .entries .graph-list-entry a {
+  font-size: 22px;
+  text-decoration: none;
+  color: #aaa;
+}
+
+#graph-modal .entries .graph-list-entry a:hover {
+  cursor: pointer;
+  color: rgb(255, 248, 48);
+}
+
+
+
 
 
 #main_vis {
@@ -52,7 +143,7 @@ h1 {
   top: 0;
   left: 0;
   bottom: 0;
-  width: 220px;
+  width: 160px;
   padding-left: 5px;
   background-color: rgba(0, 0, 0, 0.3); 
 }
@@ -124,7 +215,8 @@ h1 {
 .onoffswitch-inner.force:before {
     content: "Constant";
     padding-left: 11px;
-    background-color: #34C251; color: #FFFFFF;
+    background-color: #88FF4D; 
+    color: #000;
 }
 .onoffswitch-inner.force:after {
     content: "Force";
