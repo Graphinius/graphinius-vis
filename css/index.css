@@ -45,6 +45,18 @@ button, input[type=button] {
   font-weight: bolder;
 }
 
+#spinner {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: none;
+}
+
+#spinner.visible {
+  display: block;
+}
+
 button:hover, input[type=button]:hover {
   cursor: pointer;
   /* background-color: rgb(255, 248, 48); */
@@ -111,7 +123,7 @@ button:hover, input[type=button]:hover {
 }
 
 #graph-modal .entries .graph-list-entry {
-  background-color: rgba(30, 30, 30, 0.5);
+  /* background-color: rgba(30, 30, 30, 0.5); */
   border-radius: 5px;
   padding: 8px 8px 8px 20px;
   margin-bottom: 8px;

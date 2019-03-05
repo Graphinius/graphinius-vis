@@ -1,6 +1,6 @@
 const BASE_IMAGES_URL = 'https://berndmalle.com/graphinius-sample-data/images/';
 
-console.log('Calling $GV from fetchResources: ', $GV)
+// console.log('Calling $GV from fetchResources: ', $GV)
 
 function fetchJson( url ) {
   return fetch(url, {
@@ -50,8 +50,8 @@ async function loadAndRenderGraph( graph_url ) {
       document.querySelector("#dir-edges").innerHTML = window.graph.nrDirEdges();
       document.querySelector("#und-edges").innerHTML = window.graph.nrUndEdges();
 
+      hideSpinner();
       $GV.core.render.renderGraph();
-      hideGraphModal();
     });
 }
 
@@ -75,6 +75,8 @@ async function displayCategoryGraphs( cat ) {
       e.preventDefault();
       console.log(`${BASE_IMAGES_URL}/${cat}/${graph.name}`);
       
+      hideGraphModal();
+      showSpinner();
       loadAndRenderGraph( `${BASE_IMAGES_URL}/${cat}/${graph.name}` );
     });
     entries_el.appendChild(elChild);
@@ -108,10 +110,20 @@ async function displayGraphCategories() {
 
 
 function showGraphModal() {
-  document.querySelector( "#graph-modal" ).classList.add("visible");
+  document.querySelector( "#graph-modal" ).classList.add( "visible" );
 }
 
 
 function hideGraphModal() {
-  document.querySelector( "#graph-modal" ).classList.remove("visible");
+  document.querySelector( "#graph-modal" ).classList.remove( "visible" );
+}
+
+
+function showSpinner() {
+  document.querySelector( "#spinner" ).classList.add( "visible" );
+}
+
+
+function hideSpinner() {
+  document.querySelector( "#spinner" ).classList.remove( "visible" );
 }
