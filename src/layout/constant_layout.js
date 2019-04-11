@@ -2,6 +2,7 @@ var container = require("../core/init.js").container;
 var defaults = require("../core/init.js").defaults;
 var dims = require("../core/init.js").globals.graph_dims;
 var globals = require("../core/init.js").globals;
+var axes = require("../core/init.js").axes;
 
 //tmp object to find indices
 var nodes_obj_idx = {},
@@ -152,6 +153,10 @@ function renderGraph(graph) {
 
   globals.scene.add(globals.network);
   globals.camera.position.z = Math.max(dims.MAX_X, dims.MAX_Y);
+
+  // Manually rotate the graph into the 'right' position / direction
+  globals.network.rotateOnAxis(axes.axis_x, Math.PI);
+  axes.axis_y.applyAxisAngle(axes.axis_x, -Math.PI);
 }
 
 module.exports = {

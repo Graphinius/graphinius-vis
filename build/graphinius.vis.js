@@ -322,6 +322,7 @@
 	var defaults = __webpack_require__(1).defaults;
 	var dims = __webpack_require__(1).globals.graph_dims;
 	var globals = __webpack_require__(1).globals;
+	var axes = __webpack_require__(1).axes;
 
 	//tmp object to find indices
 	var nodes_obj_idx = {},
@@ -472,6 +473,10 @@
 
 	  globals.scene.add(globals.network);
 	  globals.camera.position.z = Math.max(dims.MAX_X, dims.MAX_Y);
+
+	  // Manually rotate the graph into the 'right' position / direction
+	  globals.network.rotateOnAxis(axes.axis_x, Math.PI);
+	  axes.axis_y.applyAxisAngle(axes.axis_x, -Math.PI);
 	}
 
 	module.exports = {
