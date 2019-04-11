@@ -85,6 +85,9 @@ async function displayCategoryGraphs( cat ) {
 
 
 async function displayGraphCategories() {
+  // first, clear the scene
+  // $GV.core.render.reset();
+
   showGraphModal();
 
   let categories = await getGraphsDirectoryListing();

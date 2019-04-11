@@ -9,8 +9,8 @@ const IMG_PREFIX = document.location.hostname === 'localhost' ? '../../img/' : '
 console.log(`IMG_PREFIX set to ${IMG_PREFIX}`);
 
 var disc = IMG_PREFIX + "disc.png";
-var flake = IMG_PREFIX + "snowflake.png";
-var bernd = IMG_PREFIX + "bernd.jpg";
+// var flake = IMG_PREFIX + "snowflake.png";
+// var bernd = IMG_PREFIX + "bernd.jpg";
 
 var config = {
   axes: {
@@ -122,7 +122,7 @@ var config = {
       index: 0, color: new THREE.Color(), node: null
     },
     raycaster: new THREE.Raycaster(),
-    renderer: new THREE.WebGLRenderer({antialias: false, alpha: true}),
+    renderer: new THREE.WebGLRenderer({antialias: true, alpha: true}),
     scene: new THREE.Scene(),
     network: new THREE.Group(),
     camera: null

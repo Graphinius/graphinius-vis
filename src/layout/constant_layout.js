@@ -17,6 +17,10 @@ globals.camera = new THREE.PerspectiveCamera(
 function renderGraph(graph) {
   // console.log(defaults.edge_color);
   // console.log(defaults.node_color);
+
+  let nodes_obj = graph.getNodes();
+  let und_edges = graph.getUndEdges();
+  let dir_edges = graph.getDirEdges();
   
   dims.MIN_X = dims.MIN_Y = dims.MIN_Z = Number.POSITIVE_INFINITY;
   dims.MAX_X = dims.MAX_Y = dims.MAX_Z = Number.NEGATIVE_INFINITY;

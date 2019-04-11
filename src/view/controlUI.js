@@ -2,6 +2,7 @@ var defaults = require("../core/init.js").defaults;
 var force = require("../core/init.js").force_layout;
 var switchToFullScreen = require("./fullscreen").switchToFullScreen;
 
+/*
 if(localStorage.getItem("directed") == 1) {
   document.querySelector("#directed").checked = true;
   document.querySelector("#undirected").checked = false;
@@ -10,21 +11,22 @@ else {
   document.querySelector("#directed").checked = false;
   document.querySelector("#undirected").checked = true;
 }
+*/
 
-directed.onclick = function() {
-  localStorage.setItem("directed", Number(1));
-  window.location.reload();
-};
+// directed.onclick = function() {
+//   localStorage.setItem("directed", Number(1));
+//   window.location.reload();
+// };
 
-undirected.onclick = function() {
-  localStorage.setItem("directed", Number(0));
-  window.location.reload();
-};
+// undirected.onclick = function() {
+//   localStorage.setItem("directed", Number(0));
+//   window.location.reload();
+// };
 
-function setDirectionUnchecked() {
-  document.querySelector("#directed").checked = false;
-  document.querySelector("#undirected").checked = false;
-}
+// function setDirectionUnchecked() {
+//   document.querySelector("#directed").checked = false;
+//   document.querySelector("#undirected").checked = false;
+// }
 
 function startStopForce() {
   //start force directed layout
@@ -130,5 +132,5 @@ document.querySelector("#bg-blur").addEventListener('input', (e) => {
 module.exports = {
   startStopForce: startStopForce,
   startStopHistory: startStopHistory,
-  setDirectionUnchecked: setDirectionUnchecked
+  // setDirectionUnchecked: setDirectionUnchecked
 };

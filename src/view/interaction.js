@@ -208,6 +208,9 @@ function switchTo2D() {
 
 function switchTo3D() {
   globals.TWO_D_MODE = false;
+  let nodes_obj = graph.getNodes();
+  let und_edges = graph.getUndEdges();
+  let dir_edges = graph.getDirEdges();
 
   var i = 0;
   var array = network.children[0].geometry.attributes.position.array;

@@ -111,8 +111,8 @@
 	console.log(`IMG_PREFIX set to ${IMG_PREFIX}`);
 
 	var disc = IMG_PREFIX + "disc.png";
-	var flake = IMG_PREFIX + "snowflake.png";
-	var bernd = IMG_PREFIX + "bernd.jpg";
+	// var flake = IMG_PREFIX + "snowflake.png";
+	// var bernd = IMG_PREFIX + "bernd.jpg";
 
 	var config = {
 	  axes: {
@@ -224,7 +224,7 @@
 	      index: 0, color: new THREE.Color(), node: null
 	    },
 	    raycaster: new THREE.Raycaster(),
-	    renderer: new THREE.WebGLRenderer({antialias: false, alpha: true}),
+	    renderer: new THREE.WebGLRenderer({antialias: true, alpha: true}),
 	    scene: new THREE.Scene(),
 	    network: new THREE.Group(),
 	    camera: null
@@ -259,18 +259,9 @@
 	    throw new Error("No graph object present, unable to render anything.");
 	  }
 
-	  if(!window.nodes_obj || !window.node_keys) {
-	    window.nodes_obj = window.graph.getNodes();
-	    window.node_keys = Object.keys(window.nodes_obj);
-	    window.und_edges = window.graph.getUndEdges();
-	    window.und_edges_keys = Object.keys(window.und_edges);
-	    window.dir_edges = window.graph.getDirEdges();
-	    window.dir_edges_keys = Object.keys(window.dir_edges);
-	  }
-
 	  constant.renderGraph(graph);
 	  window.requestAnimationFrame(updateGraph);
-	  controlUI.setDirectionUnchecked();
+	  // controlUI.setDirectionUnchecked();
 	  console.log("rendering graph...");
 	}
 
@@ -278,13 +269,50 @@
 	  // make transparent
 	  globals.renderer.setClearColor(0x000000, 0);
 	  globals.renderer.render(globals.scene, globals.camera);
-	};
+	}
+
+	function clearScene() {
+	  let obj = globals.scene
+	  while(obj.children.length > 0) {
+	    // clearScene(obj.children[0])
+	    obj.remove(obj.children[0])
+	  }
+	  if(obj.geometry) obj.geometry.dispose()
+	  if(obj.material) obj.material.dispose()
+	  if(obj.texture) obj.texture.dispose()
+	  
+	  // De-reference
+	  window.graph = null
+	  globals.raycaster = null
+	  globals.renderer = null
+	  globals.scene = null
+	  globals.network = null
+	}
+
+
+	/**
+	 * Re-instantiating everything seems to keep the GPU memory (of course, why wouldn't it)
+	 * 
+	 * @description why does a page refresh clear the GPU then?
+	 * 
+	 * @todo find a way to clear the GPU from JS...
+	 */
+	function resetScene() {
+	  clearScene()
+	  setTimeout( () => {
+	    globals.raycaster = new THREE.Raycaster()
+	    globals.renderer = new THREE.WebGLRenderer({antialias: true, alpha: true})
+	    globals.scene = new THREE.Scene()
+	    globals.network = new THREE.Group()
+	  }, 300)
+	}
+
 
 	module.exports = {
-	    renderGraph: renderGraph,
-	    update: updateGraph
+	  renderGraph: renderGraph,
+	  update: updateGraph
+	  // reset: resetScene
 	};
-
 
 /***/ }),
 /* 3 */
@@ -309,6 +337,10 @@
 	function renderGraph(graph) {
 	  // console.log(defaults.edge_color);
 	  // console.log(defaults.node_color);
+
+	  let nodes_obj = graph.getNodes();
+	  let und_edges = graph.getUndEdges();
+	  let dir_edges = graph.getDirEdges();
 	  
 	  dims.MIN_X = dims.MIN_Y = dims.MIN_Z = Number.POSITIVE_INFINITY;
 	  dims.MAX_X = dims.MAX_Y = dims.MAX_Z = Number.NEGATIVE_INFINITY;
@@ -457,6 +489,7 @@
 	var force = __webpack_require__(1).force_layout;
 	var switchToFullScreen = __webpack_require__(5).switchToFullScreen;
 
+	/*
 	if(localStorage.getItem("directed") == 1) {
 	  document.querySelector("#directed").checked = true;
 	  document.querySelector("#undirected").checked = false;
@@ -465,21 +498,22 @@
 	  document.querySelector("#directed").checked = false;
 	  document.querySelector("#undirected").checked = true;
 	}
+	*/
 
-	directed.onclick = function() {
-	  localStorage.setItem("directed", Number(1));
-	  window.location.reload();
-	};
+	// directed.onclick = function() {
+	//   localStorage.setItem("directed", Number(1));
+	//   window.location.reload();
+	// };
 
-	undirected.onclick = function() {
-	  localStorage.setItem("directed", Number(0));
-	  window.location.reload();
-	};
+	// undirected.onclick = function() {
+	//   localStorage.setItem("directed", Number(0));
+	//   window.location.reload();
+	// };
 
-	function setDirectionUnchecked() {
-	  document.querySelector("#directed").checked = false;
-	  document.querySelector("#undirected").checked = false;
-	}
+	// function setDirectionUnchecked() {
+	//   document.querySelector("#directed").checked = false;
+	//   document.querySelector("#undirected").checked = false;
+	// }
 
 	function startStopForce() {
 	  //start force directed layout
@@ -585,7 +619,7 @@
 	module.exports = {
 	  startStopForce: startStopForce,
 	  startStopHistory: startStopHistory,
-	  setDirectionUnchecked: setDirectionUnchecked
+	  // setDirectionUnchecked: setDirectionUnchecked
 	};
 
 /***/ }),
@@ -917,6 +951,10 @@
 
 	//Hint: index = node id
 	function colorDistMap(result_object) {
+	  let nodes_obj = graph.getNodes();
+	  let und_edges = graph.getUndEdges();
+	  let dir_edges = graph.getDirEdges();
+
 	  segment_color_obj = {};
 	  var max_distance = 0,
 	      additional_node = false,
@@ -982,6 +1020,10 @@
 
 	//Hint: index = node id
 	function colorDFS(node) {
+	  let nodes_obj = graph.getNodes();
+	  let und_edges = graph.getUndEdges();
+	  let dir_edges = graph.getDirEdges();
+	  
 	  segment_color_obj = {};
 	  var start_node = graph.getRandomNode(),
 	      colors = [];
@@ -2248,6 +2290,9 @@
 
 	function switchTo3D() {
 	  globals.TWO_D_MODE = false;
+	  let nodes_obj = graph.getNodes();
+	  let und_edges = graph.getUndEdges();
+	  let dir_edges = graph.getDirEdges();
 
 	  var i = 0;
 	  var array = network.children[0].geometry.attributes.position.array;

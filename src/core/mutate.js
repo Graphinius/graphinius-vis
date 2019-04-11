@@ -248,6 +248,10 @@ function colorPFSclick() {
 
 //Hint: index = node id
 function colorDistMap(result_object) {
+  let nodes_obj = graph.getNodes();
+  let und_edges = graph.getUndEdges();
+  let dir_edges = graph.getDirEdges();
+
   segment_color_obj = {};
   var max_distance = 0,
       additional_node = false,
@@ -313,6 +317,10 @@ function colorDistMap(result_object) {
 
 //Hint: index = node id
 function colorDFS(node) {
+  let nodes_obj = graph.getNodes();
+  let und_edges = graph.getUndEdges();
+  let dir_edges = graph.getDirEdges();
+  
   segment_color_obj = {};
   var start_node = graph.getRandomNode(),
       colors = [];

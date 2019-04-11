@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="css/cookiebanner.css">
 	</head>
 
-	<body>    
+	<body onload="displayGraphCategories()">    
     <div class="container">
 
       <div id="bg-cover" class="on"></div>
@@ -69,15 +69,15 @@
         
         
         <h3>Graph Input</h3>
-          <button id="loadSampleGraphsListing" onclick="displayGraphCategories()">LOAD GRAPH</button>
+          <button id="loadSampleGraphsListing" onclick="window.location.reload(true)">LOAD GRAPH</button>
           <!-- <button id="loadSampleGraphsCitiesListing" onclick="getGraphsCategoryListing('cities')">Load city graph listing</button> -->
 
-          <form>
+          <!-- <form>
             <input type="radio" id="undirected" name="direction" value="undirected" onclick><label for="undirected">undirected graph</label><br>
             <input type="radio" id="directed" name="direction" value="directed" onclick><label for="directed">directed graph</label><br><br>
           <form>
           <input id="input" value="Read File" class="button" type="file" onchange="$GV.input.json.readJSON(null, false, false, true)"><br><br>
-          <input id="renderButton" value="Render Graph" type="button" onclick="$GV.core.render.renderGraph()">
+          <input id="renderButton" value="Render Graph" type="button" onclick="$GV.core.render.renderGraph()"> -->
 
         <h3>Graph Actions</h3>
         

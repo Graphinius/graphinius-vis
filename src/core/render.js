@@ -10,18 +10,9 @@ function renderGraph() {
     throw new Error("No graph object present, unable to render anything.");
   }
 
-  if(!window.nodes_obj || !window.node_keys) {
-    window.nodes_obj = window.graph.getNodes();
-    window.node_keys = Object.keys(window.nodes_obj);
-    window.und_edges = window.graph.getUndEdges();
-    window.und_edges_keys = Object.keys(window.und_edges);
-    window.dir_edges = window.graph.getDirEdges();
-    window.dir_edges_keys = Object.keys(window.dir_edges);
-  }
-
   constant.renderGraph(graph);
   window.requestAnimationFrame(updateGraph);
-  controlUI.setDirectionUnchecked();
+  // controlUI.setDirectionUnchecked();
   console.log("rendering graph...");
 }
 
@@ -29,9 +20,47 @@ function updateGraph () {
   // make transparent
   globals.renderer.setClearColor(0x000000, 0);
   globals.renderer.render(globals.scene, globals.camera);
-};
+}
+
+function clearScene() {
+  let obj = globals.scene
+  while(obj.children.length > 0) {
+    // clearScene(obj.children[0])
+    obj.remove(obj.children[0])
+  }
+  if(obj.geometry) obj.geometry.dispose()
+  if(obj.material) obj.material.dispose()
+  if(obj.texture) obj.texture.dispose()
+  
+  // De-reference
+  window.graph = null
+  globals.raycaster = null
+  globals.renderer = null
+  globals.scene = null
+  globals.network = null
+}
+
+
+/**
+ * Re-instantiating everything seems to keep the GPU memory (of course, why wouldn't it)
+ * 
+ * @description why does a page refresh clear the GPU then?
+ * 
+ * @todo find a way to clear the GPU from JS...
+ */
+function resetScene() {
+  clearScene()
+  setTimeout( () => {
+    globals.raycaster = new THREE.Raycaster()
+    globals.renderer = new THREE.WebGLRenderer({antialias: true, alpha: true})
+    globals.scene = new THREE.Scene()
+    globals.network = new THREE.Group()
+  }, 300)
+}
+
 
 module.exports = {
-    renderGraph: renderGraph,
-    update: updateGraph
+  renderGraph: renderGraph,
+  update: updateGraph
+  // reset: resetScene
 };
