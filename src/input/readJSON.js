@@ -1,4 +1,4 @@
-function readJSON(event, explicit, direction, weighted_mode) {
+function readJSON(explicit, direction, weighted_mode, random_coords) {
   var startTime = +(new Date);
   var explicit = typeof explicit === 'undefined' ? false : explicit;
   var direction = typeof direction === 'undefined' ? false : direction;
@@ -40,9 +40,15 @@ function readJSON(event, explicit, direction, weighted_mode) {
       var parsedFile = JSON.parse(event.target.result);
 
       /**
-       * THIS line is where the graph is actually read...
+       * Actually reading the graph...
        */
       window.graph = json.readFromJSON(parsedFile);
+      
+      let node_keys = Object.keys(window.graph.getNodes());
+      if ( random_coords && !window.graph.getNodes()[node_keys[0]].getFeature('coords') ) {
+        console.log(`No coords found - generating random coordinates in range (0, 512)`);
+        generateRandomCoords(window.graph);
+      }
 
       /**
        * @todo {action} OMG refactor !!!
@@ -61,6 +67,20 @@ function readJSON(event, explicit, direction, weighted_mode) {
 
   return result;
 };
+
+
+function generateRandomCoords(graph) {
+  let nodes = graph.getNodes();
+  for ( let node_idx in nodes ) {
+    let coords = {
+      x: Math.random()*512,
+      y: Math.random()*512,
+      z: Math.random()*512
+    }
+    nodes[node_idx].setFeature('coords', coords);
+  }
+}
+
 
 module.exports = {
   readJSON: readJSON

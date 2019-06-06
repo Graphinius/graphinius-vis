@@ -49,15 +49,14 @@
 	    mutate          = __webpack_require__(6),
 	    hist_reader     = __webpack_require__(7),
 	    main_loop       = __webpack_require__(8),
-	    readCSV         = __webpack_require__(9),
-	    readJSON        = __webpack_require__(10),
+	    readJSON        = __webpack_require__(9),
 	    const_layout    = __webpack_require__(3),
-	    sine_swing      = __webpack_require__(11),
-	    force_layout    = __webpack_require__(12),
+	    sine_swing      = __webpack_require__(10),
+	    force_layout    = __webpack_require__(11),
 	    fullscreen      = __webpack_require__(5),
-	    interaction     = __webpack_require__(18),
-	    navigation      = __webpack_require__(19),
-	    navigation      = __webpack_require__(20),    
+	    interaction     = __webpack_require__(17),
+	    navigation      = __webpack_require__(18),
+	    navigation      = __webpack_require__(19),    
 	    controlUI       = __webpack_require__(4);
 	    
 
@@ -74,7 +73,6 @@
 	    loop: main_loop
 	  },
 	  input: {
-	    csv: readCSV,
 	    json: readJSON
 	  },
 	  layout: {
@@ -1139,13 +1137,7 @@
 /* 9 */
 /***/ (function(module, exports) {
 
-	
-
-/***/ }),
-/* 10 */
-/***/ (function(module, exports) {
-
-	function readJSON(event, explicit, direction, weighted_mode) {
+	function readJSON(explicit, direction, weighted_mode, random_coords) {
 	  var startTime = +(new Date);
 	  var explicit = typeof explicit === 'undefined' ? false : explicit;
 	  var direction = typeof direction === 'undefined' ? false : direction;
@@ -1187,9 +1179,15 @@
 	      var parsedFile = JSON.parse(event.target.result);
 
 	      /**
-	       * THIS line is where the graph is actually read...
+	       * Actually reading the graph...
 	       */
 	      window.graph = json.readFromJSON(parsedFile);
+	      
+	      let node_keys = Object.keys(window.graph.getNodes());
+	      if ( random_coords && !window.graph.getNodes()[node_keys[0]].getFeature('coords') ) {
+	        console.log(`No coords found - generating random coordinates in range (0, 512)`);
+	        generateRandomCoords(window.graph);
+	      }
 
 	      /**
 	       * @todo {action} OMG refactor !!!
@@ -1209,13 +1207,27 @@
 	  return result;
 	};
 
+
+	function generateRandomCoords(graph) {
+	  let nodes = graph.getNodes();
+	  for ( let node_idx in nodes ) {
+	    let coords = {
+	      x: Math.random()*512,
+	      y: Math.random()*512,
+	      z: Math.random()*512
+	    }
+	    nodes[node_idx].setFeature('coords', coords);
+	  }
+	}
+
+
 	module.exports = {
 	  readJSON: readJSON
 	};
 
 
 /***/ }),
-/* 11 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var INIT = __webpack_require__(1);
@@ -1345,7 +1357,7 @@
 
 
 /***/ }),
-/* 12 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var INIT = __webpack_require__(1);
@@ -1439,7 +1451,7 @@
 	  // console.log(gl_nodes);
 
 	  // build quad tree:
-	  var createQuadTree = __webpack_require__(13);
+	  var createQuadTree = __webpack_require__(12);
 	  var quadTree = createQuadTree();
 
 	  // insert bodies into the quad tree 
@@ -1562,7 +1574,7 @@
 	force.fdStop = fdStop;
 
 /***/ }),
-/* 13 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	/**
@@ -1578,10 +1590,10 @@
 	  options.theta = typeof options.theta === 'number' ? options.theta : 0.8;
 
 	  // we require deterministic randomness here
-	  var random = __webpack_require__(14).random(1984),
-	    Node = __webpack_require__(15),
-	    InsertStack = __webpack_require__(16),
-	    isSamePosition = __webpack_require__(17);
+	  var random = __webpack_require__(13).random(1984),
+	    Node = __webpack_require__(14),
+	    InsertStack = __webpack_require__(15),
+	    isSamePosition = __webpack_require__(16);
 
 	  var gravity = options.gravity,
 	    updateQueue = [],
@@ -1895,7 +1907,7 @@
 
 
 /***/ }),
-/* 14 */
+/* 13 */
 /***/ (function(module, exports) {
 
 	module.exports = {
@@ -1986,7 +1998,7 @@
 
 
 /***/ }),
-/* 15 */
+/* 14 */
 /***/ (function(module, exports) {
 
 	/**
@@ -2022,7 +2034,7 @@
 
 
 /***/ }),
-/* 16 */
+/* 15 */
 /***/ (function(module, exports) {
 
 	module.exports = InsertStack;
@@ -2070,7 +2082,7 @@
 
 
 /***/ }),
-/* 17 */
+/* 16 */
 /***/ (function(module, exports) {
 
 	module.exports = function isSamePosition(point1, point2) {
@@ -2082,7 +2094,7 @@
 
 
 /***/ }),
-/* 18 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var network = __webpack_require__(1).globals.network;
@@ -2406,7 +2418,7 @@
 
 
 /***/ }),
-/* 19 */
+/* 18 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var keys = __webpack_require__(1).keys;
@@ -2416,7 +2428,7 @@
 	var network = __webpack_require__(1).globals.network;
 	var container = __webpack_require__(1).container;
 	var mouse = __webpack_require__(1).globals.mouse;
-	var nodeIntersection = __webpack_require__(18).nodeIntersection;
+	var nodeIntersection = __webpack_require__(17).nodeIntersection;
 	var callbacks = __webpack_require__(1).callbacks;
 	var axes = __webpack_require__(1).axes;
 
@@ -2615,7 +2627,7 @@
 
 
 /***/ }),
-/* 20 */
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var keys = __webpack_require__(1).keys;
@@ -2625,10 +2637,10 @@
 	var network = __webpack_require__(1).globals.network;
 	var container = __webpack_require__(1).container;
 	var mouse = __webpack_require__(1).globals.mouse;
-	var nodeIntersection = __webpack_require__(18).nodeIntersection;
+	var nodeIntersection = __webpack_require__(17).nodeIntersection;
 	var callbacks = __webpack_require__(1).callbacks;
-	var freeStyle = __webpack_require__(19).freeStyle;
-	var confineXYMovement = __webpack_require__(19).confineXYMovement;
+	var freeStyle = __webpack_require__(18).freeStyle;
+	var confineXYMovement = __webpack_require__(18).confineXYMovement;
 	var axes = __webpack_require__(1).axes;
 
 	/**

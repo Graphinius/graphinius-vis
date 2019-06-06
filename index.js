@@ -3,7 +3,6 @@ var init            = require("./src/core/init.js"),
     mutate          = require("./src/core/mutate.js"),
     hist_reader     = require("./src/history/history_reader.js"),
     main_loop       = require("./src/history/main_loop.js"),
-    readCSV         = require("./src/input/readCSV.js"),
     readJSON        = require("./src/input/readJSON.js"),
     const_layout    = require("./src/layout/constant_layout.js"),
     sine_swing      = require("./src/layout/sine_swing.js"),
@@ -28,7 +27,6 @@ out.$GV = {
     loop: main_loop
   },
   input: {
-    csv: readCSV,
     json: readJSON
   },
   layout: {
